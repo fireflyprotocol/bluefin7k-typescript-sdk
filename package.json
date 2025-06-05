@@ -1,0 +1,77 @@
+{
+  "name": "@bluefin/bluefin7k-sdk-ts",
+  "version": "4.0.0",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/types/index.d.ts",
+        "default": "./lib/esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/cjs/types/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      }
+    },
+    "./esm": {
+      "types": "./lib/esm/types/index.d.ts",
+      "default": "./lib/esm/index.mjs"
+    },
+    "./cjs": {
+      "types": "./lib/cjs/types/index.d.ts",
+      "default": "./lib/cjs/index.js"
+    }
+  },
+  "types": "./lib/cjs/types/index.d.ts",
+  "main": "./lib/cjs/index.js",
+  "files": [
+    "lib/**/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf ./lib",
+    "prepare": "husky",
+    "tsc": "npx tsc -p ./configs/tsconfig.base.json --noEmit",
+    "lint": "npx eslint ./src",
+    "prettier": "npx prettier --write .",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
+    "build:cjs": "tsc -p ./configs/tsconfig.cjs.json",
+    "prepack": "npm run build",
+    "test": "mocha --timeout 10000",
+    "publish:patch": "npm version patch --no-git-tag-version && npm publish --access public",
+    "publish:minor": "npm version minor --no-git-tag-version && npm publish --access public",
+    "publish:major": "npm version major --no-git-tag-version && npm publish --access public",
+    "publish:beta": "npm version prerelease --preid=beta --no-git-tag-version && npm publish --tag beta --access public"
+  },
+  "keywords": [
+    "Bluefin7k Aggregator",
+    "DEX Aggregator",
+    "Sui Network"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fireflyprotocol/bluefin7k-typescript-sdk"
+  },
+  "author": "Bluefin Protocol",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "@types/chai": "^5.2.2",
+    "@types/eslint__js": "^8.42.3",
+    "@types/mocha": "^10.0.10",
+    "chai": "^5.2.0",
+    "eslint": "^9.26.0",
+    "husky": "^9.1.7",
+    "mocha": "^11.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0"
+  },
+  "peerDependencies": {
+    "@mysten/sui": "^1.29.1",
+    "@pythnetwork/pyth-sui-js": "^2.1.0"
+  }
+}
