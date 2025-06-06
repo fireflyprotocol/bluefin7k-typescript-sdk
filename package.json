@@ -1,5 +1,5 @@
 {
-  "name": "@bluefin/bluefin7k-sdk-ts",
+  "name": "@bluefin-exchange/bluefin7k-aggregator-sdk",
   "version": "4.0.0",
   "description": "",
   "exports": {

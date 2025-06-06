@@ -1,4 +1,4 @@
-# @bluefin/bluefin7k-sdk-ts
+# @bluefin-exchange/bluefin7k-aggregator-sdk
 
 ## 4.0.0
 

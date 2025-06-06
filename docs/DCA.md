@@ -10,7 +10,7 @@ canceling, and tracking executions.
 Use this API to create a new DCA order.
 
 ```typescript
-import { placeDcaOrder } from "@bluefin/bluefin7k-sdk-ts";
+import { placeDcaOrder } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const tx = await placeDcaOrder({
   payCoinType:
@@ -35,7 +35,7 @@ const tx = await placeDcaOrder({
 Use this API to retrieve a list of open DCA orders.
 
 ```typescript
-import { getOpenDcaOrders } from "@bluefin/bluefin7k-sdk-ts";
+import { getOpenDcaOrders } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const openDcaOrders = await getOpenDcaOrders({
   owner: "0xSenderAddress",
@@ -51,7 +51,7 @@ const openDcaOrders = await getOpenDcaOrders({
 Retrieve the execution history of a specific DCA order.
 
 ```typescript
-import { getDcaOrderExecutions } from "@bluefin/bluefin7k-sdk-ts";
+import { getDcaOrderExecutions } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const orderExecutions = await getDcaOrderExecutions({
   orderId: "orderId", // The unique order ID (retrieved from getOpenDcaOrders).
@@ -66,7 +66,7 @@ const orderExecutions = await getDcaOrderExecutions({
 Cancel an active DCA order using its unique order ID.
 
 ```typescript
-import { cancelDcaOrder } from "@bluefin/bluefin7k-sdk-ts";
+import { cancelDcaOrder } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const tx = await cancelDcaOrder({
   orderId: "orderId", // The unique order ID (retrieved from getOpenDcaOrders).
@@ -82,7 +82,7 @@ const tx = await cancelDcaOrder({
 Retrieve a list of closed DCA orders.
 
 ```typescript
-import { getClosedDcaOrders } from "@bluefin/bluefin7k-sdk-ts";
+import { getClosedDcaOrders } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const closedDcaOrders = await getClosedDcaOrders({
   owner: "0xSenderAddress",

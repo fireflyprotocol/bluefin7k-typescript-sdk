@@ -18,7 +18,7 @@ with the following key features:
 ### Basic Swap Example
 
 ```typescript
-import { getQuote, buildTx, executeTx } from "@bluefin/bluefin7k-sdk-ts";
+import { getQuote, buildTx, executeTx } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 // Example swap parameters
 const swapParams = {

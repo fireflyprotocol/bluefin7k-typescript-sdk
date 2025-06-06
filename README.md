@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-npm i @bluefin/bluefin7k-sdk-ts
+npm i @bluefin-exchange/bluefin7k-aggregator-sdk
 ```
 
 This package requires `@pythnetwork/pyth-sui-js` as a peer dependency. If your
@@ -18,13 +18,13 @@ npm i @pythnetwork/pyth-sui-js
 You can import the entire SDK as a module:
 
 ```typescript
-import SevenK from "@bluefin/bluefin7k-sdk-ts";
+import SevenK from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 ```
 
 or import specific functions as needed:
 
 ```typescript
-import { getQuote, buildTx } from "@bluefin/bluefin7k-sdk-ts";
+import { getQuote, buildTx } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 ```
 
 ## Config
@@ -53,7 +53,7 @@ Create a ticket to request an API key for Bluefin7k Aggregator.
 | Backend  | Optional (required to increase limit) | 5 requests/second (without key) | Yes (requires API Key & partner information) |
 
 ```typescript
-import { Config } from "@bluefin/bluefin7k-sdk-ts";
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 Config.setApiKey("YOUR_API_KEY");
 console.log("API key", Config.getApiKey());
@@ -63,7 +63,7 @@ console.log("API key", Config.getApiKey());
 
 ```typescript
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
-import { Config } from "@bluefin/bluefin7k-sdk-ts";
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const network = "mainnet";
 const suiClient = new SuiClient({ url: getFullnodeUrl(network) });
@@ -92,7 +92,7 @@ See [DCA Orders](docs/DCA.md).
 ## Prices
 
 ```typescript
-import { getTokenPrice, getTokenPrices, getSuiPrice } from "@bluefin/bluefin7k-sdk-ts";
+import { getTokenPrice, getTokenPrices, getSuiPrice } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const tokenPrice = await getTokenPrice(
   "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",

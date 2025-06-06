@@ -3,7 +3,7 @@
 ## 1. Get Quote
 
 ```typescript
-import { getQuote } from "@bluefin/bluefin7k-sdk-ts";
+import { getQuote } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const quoteResponse = await getQuote({
   tokenIn: "0x2::sui::SUI",
@@ -16,7 +16,7 @@ const quoteResponse = await getQuote({
 or
 
 ```typescript
-import { getQuote } from "@bluefin/bluefin7k-sdk-ts";
+import { getQuote } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const quoteResponse = await getQuote({
   tokenIn: "0x2::sui::SUI",
@@ -39,7 +39,7 @@ const quoteResponse = await getQuote({
 ## 2. Build Transaction
 
 ```typescript
-import { buildTx } from "@bluefin/bluefin7k-sdk-ts";
+import { buildTx } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const result = await buildTx({
   quoteResponse,
@@ -57,7 +57,7 @@ or
 
 ```typescript
 import { Transaction } from "@mysten/sui/transactions";
-import { buildTx } from "@bluefin/bluefin7k-sdk-ts";
+import { buildTx } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const tx = new Transaction();
 
@@ -85,7 +85,7 @@ address. This is required for partner tracking and analytics purposes.
 
 ```typescript
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
-import { getQuote, buildTx, executeTx, BluefinXTx } from "@bluefin/bluefin7k-sdk-ts";
+import { getQuote, buildTx, executeTx, BluefinXTx } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 import { useSignTransaction } from "@mysten/wallet-kit";
 
 const { mutateAsync: signTransaction } = useSignTransaction();
@@ -123,7 +123,7 @@ For BluefinX transaction See [BluefinX](./BLUEFINX.md).
 ## Estimate Gas Fee
 
 ```typescript
-import { estimateGasFee } from "@bluefin/bluefin7k-sdk-ts";
+import { estimateGasFee } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const feeInUsd = await estimateGasFee({
   quoteResponse,
@@ -139,7 +139,7 @@ const feeInUsd = await estimateGasFee({
 or
 
 ```typescript
-import { getSuiPrice, estimateGasFee } from "@bluefin/bluefin7k-sdk-ts";
+import { getSuiPrice, estimateGasFee } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 // get sui price using sdk or from else where
 const suiPrice = await getSuiPrice();
@@ -159,7 +159,7 @@ const feeInUsd = await estimateGasFee({
 ## Get Swap History
 
 ```typescript
-import { getSwapHistory } from "@bluefin/bluefin7k-sdk-ts";
+import { getSwapHistory } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const swapHistory = await getSwapHistory({
   owner: "0xSenderAddress",
