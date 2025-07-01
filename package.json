@@ -1,6 +1,6 @@
 {
   "name": "@bluefin-exchange/bluefin7k-aggregator-sdk",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "",
   "exports": {
     ".": {
