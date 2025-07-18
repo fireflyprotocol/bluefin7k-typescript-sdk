@@ -143,7 +143,14 @@ export const DEFAULT_CONFIG: Config = {
 
 let config: Config | null = DEFAULT_CONFIG;
 let configTs: number = 0;
-export async function getConfig() {
+export async function getConfig(
+  swapViaPartner:
+    | {
+        partnerAddress: string;
+        feePercentage1e6: number;
+      }
+    | undefined = undefined
+) {
   const ttl = 60;
   if (config && Date.now() - configTs < ttl * 1000) {
     return config;
@@ -152,7 +159,11 @@ export async function getConfig() {
   try {
     const response = await fetchClient(`${API_ENDPOINTS.MAIN}/config`);
     const quoteResponse = (await response.json()) as Config;
-    config = { ...config, ...quoteResponse };
+    config = {
+      ...config,
+      ...quoteResponse,
+      swapViaPartner: swapViaPartner || undefined,
+    };
     configTs = Date.now();
     return config;
   } catch (_) {

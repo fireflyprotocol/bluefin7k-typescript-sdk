@@ -133,6 +133,10 @@ export interface Config {
   magma: DexConfig & { globalConfig: string };
   haedal_pmm: DexConfig;
   momentum: DexConfig & { version: string };
+  swapViaPartner?: {
+    partnerAddress: string;
+    feePercentage1e6: number;
+  };
 }
 
 export type ExtraOracle = {

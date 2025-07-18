@@ -51,6 +51,13 @@ export interface CommonParams {
 export interface BuildTxParams extends CommonParams {
   /** Developer inspection mode */
   devInspect?: boolean;
+  /**
+   * If true, indicates that the transaction is swapped via partner
+   */
+  swapViaPartner?: {
+    partnerAddress: string;
+    feePercentage1e6: number;
+  };
 }
 
 export interface EstimateGasFeeParams extends CommonParams {
