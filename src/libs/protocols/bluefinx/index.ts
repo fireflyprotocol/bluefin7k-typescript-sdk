@@ -43,7 +43,7 @@ export class BluefinXContract extends BaseContract {
       created_at: extra.createdAtUtcMillis,
     }).toBytes();
     if (this.config.swapViaPartner) {
-      const [out] = tx.moveCall({
+      const [out, fee] = tx.moveCall({
         arguments: [
           tx.object(SUI_CLOCK_OBJECT_ID),
           tx.object(extra.vault),
@@ -61,8 +61,10 @@ export class BluefinXContract extends BaseContract {
         target: `${this.config.bluefinx.package}::vault::swap_via_partner`,
         typeArguments: [this.swapInfo.assetIn, this.swapInfo.assetOut],
       });
+      const feeCoin = SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, fee);
+      tx.transferObjects([feeCoin], this.config.swapViaPartner.partnerAddress);
       return SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, out);
-    } else {
+    } else {  
       const [out] = tx.moveCall({
         arguments: [
           tx.object(SUI_CLOCK_OBJECT_ID),
@@ -79,6 +81,7 @@ export class BluefinXContract extends BaseContract {
         target: `${this.config.bluefinx.package}::vault::swap`,
         typeArguments: [this.swapInfo.assetIn, this.swapInfo.assetOut],
       });
+
       return SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, out);
     }
   }

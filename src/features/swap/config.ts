@@ -163,6 +163,13 @@ export async function getConfig(
       ...config,
       ...quoteResponse,
       swapViaPartner: swapViaPartner || undefined,
+      bluefinx: {
+        name: "BluefinX",
+        package:
+          "0x9633d611ea4b3a30751135cede2c7871980955473c1c7c883d43567e7e9b164e",
+        globalConfig:
+          "0xc6b29a60c3924776bedc78df72c127ea52b86aeb655432979a38f13d742dedaa",
+      },
     };
     configTs = Date.now();
     return config;
