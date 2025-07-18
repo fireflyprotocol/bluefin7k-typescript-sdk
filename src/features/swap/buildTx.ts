@@ -30,6 +30,7 @@ export const buildTx = async ({
   devInspect,
   extendTx,
   isSponsored,
+  swapViaPartner,
 }: BuildTxParams): Promise<BuildTxResult> => {
   const isBluefinX = isBluefinXRouting(quoteResponse);
   const _commission = {
@@ -87,7 +88,7 @@ export const buildTx = async ({
   const pythMap = await updatePythPriceFeedsIfAny(tx, quoteResponse);
 
   const coinObjects: TransactionObjectArgument[] = [];
-  const config = await getConfig();
+  const config = await getConfig(swapViaPartner);
   await Promise.all(
     routes.map(async (route, index) => {
       const inputCoinObject = coinData[index];

@@ -42,22 +42,47 @@ export class BluefinXContract extends BaseContract {
       expires_at: extra.quoteExpiresAtUtcMillis,
       created_at: extra.createdAtUtcMillis,
     }).toBytes();
-    const [out] = tx.moveCall({
-      arguments: [
-        tx.object(SUI_CLOCK_OBJECT_ID),
-        tx.object(extra.vault),
-        tx.object(this.config.bluefinx.globalConfig),
-        tx.pure.vector("u8", Array.from(quoteBytes)),
-        tx.pure.vector("u8", Array.from(fromBase64(extra.signature))),
-        SuiUtils.coinIntoBalance(
-          tx,
-          this.swapInfo.assetIn,
-          this.inputCoinObject,
-        ),
-      ],
-      target: `${this.config.bluefinx.package}::vault::swap`,
-      typeArguments: [this.swapInfo.assetIn, this.swapInfo.assetOut],
-    });
-    return SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, out);
+    if (this.config.swapViaPartner) {
+      const [out, fee] = tx.moveCall({
+        arguments: [
+          tx.object(SUI_CLOCK_OBJECT_ID),
+          tx.object(extra.vault),
+          tx.object(this.config.bluefinx.globalConfig),
+          tx.pure.vector("u8", Array.from(quoteBytes)),
+          tx.pure.vector("u8", Array.from(fromBase64(extra.signature))),
+          SuiUtils.coinIntoBalance(
+            tx,
+            this.swapInfo.assetIn,
+            this.inputCoinObject
+          ),
+          tx.pure.address(this.config.swapViaPartner.partnerAddress),
+          tx.pure.u64(this.config.swapViaPartner.feePercentage1e6),
+        ],
+        target: `${this.config.bluefinx.package}::vault::swap_via_partner`,
+        typeArguments: [this.swapInfo.assetIn, this.swapInfo.assetOut],
+      });
+      const feeCoin = SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, fee);
+      tx.transferObjects([feeCoin], this.config.swapViaPartner.partnerAddress);
+      return SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, out);
+    } else {  
+      const [out] = tx.moveCall({
+        arguments: [
+          tx.object(SUI_CLOCK_OBJECT_ID),
+          tx.object(extra.vault),
+          tx.object(this.config.bluefinx.globalConfig),
+          tx.pure.vector("u8", Array.from(quoteBytes)),
+          tx.pure.vector("u8", Array.from(fromBase64(extra.signature))),
+          SuiUtils.coinIntoBalance(
+            tx,
+            this.swapInfo.assetIn,
+            this.inputCoinObject
+          ),
+        ],
+        target: `${this.config.bluefinx.package}::vault::swap`,
+        typeArguments: [this.swapInfo.assetIn, this.swapInfo.assetOut],
+      });
+
+      return SuiUtils.coinFromBalance(tx, this.swapInfo.assetOut, out);
+    }
   }
 }

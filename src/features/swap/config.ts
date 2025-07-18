@@ -143,7 +143,14 @@ export const DEFAULT_CONFIG: Config = {
 
 let config: Config | null = DEFAULT_CONFIG;
 let configTs: number = 0;
-export async function getConfig() {
+export async function getConfig(
+  swapViaPartner:
+    | {
+        partnerAddress: string;
+        feePercentage1e6: number;
+      }
+    | undefined = undefined
+) {
   const ttl = 60;
   if (config && Date.now() - configTs < ttl * 1000) {
     return config;
@@ -152,7 +159,18 @@ export async function getConfig() {
   try {
     const response = await fetchClient(`${API_ENDPOINTS.MAIN}/config`);
     const quoteResponse = (await response.json()) as Config;
-    config = { ...config, ...quoteResponse };
+    config = {
+      ...config,
+      ...quoteResponse,
+      swapViaPartner: swapViaPartner || undefined,
+      bluefinx: {
+        name: "BluefinX",
+        package:
+          "0x9633d611ea4b3a30751135cede2c7871980955473c1c7c883d43567e7e9b164e",
+        globalConfig:
+          "0xc6b29a60c3924776bedc78df72c127ea52b86aeb655432979a38f13d742dedaa",
+      },
+    };
     configTs = Date.now();
     return config;
   } catch (_) {
