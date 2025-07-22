@@ -35,7 +35,11 @@ const tx = await placeDcaOrder({
 Use this API to retrieve a list of open DCA orders.
 
 ```typescript
+<<<<<<< HEAD
 import { getOpenDcaOrders } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { getOpenDcaOrders } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const openDcaOrders = await getOpenDcaOrders({
   owner: "0xSenderAddress",
@@ -51,7 +55,11 @@ const openDcaOrders = await getOpenDcaOrders({
 Retrieve the execution history of a specific DCA order.
 
 ```typescript
+<<<<<<< HEAD
 import { getDcaOrderExecutions } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { getDcaOrderExecutions } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const orderExecutions = await getDcaOrderExecutions({
   orderId: "orderId", // The unique order ID (retrieved from getOpenDcaOrders).
@@ -66,7 +74,11 @@ const orderExecutions = await getDcaOrderExecutions({
 Cancel an active DCA order using its unique order ID.
 
 ```typescript
+<<<<<<< HEAD
 import { cancelDcaOrder } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { cancelDcaOrder } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const tx = await cancelDcaOrder({
   orderId: "orderId", // The unique order ID (retrieved from getOpenDcaOrders).
@@ -82,7 +94,11 @@ const tx = await cancelDcaOrder({
 Retrieve a list of closed DCA orders.
 
 ```typescript
+<<<<<<< HEAD
 import { getClosedDcaOrders } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { getClosedDcaOrders } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const closedDcaOrders = await getClosedDcaOrders({
   owner: "0xSenderAddress",

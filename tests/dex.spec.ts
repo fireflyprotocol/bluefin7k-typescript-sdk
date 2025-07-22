@@ -6,7 +6,9 @@ import { setSuiClient } from "../src/index";
 import { testSwap } from "./utils.spec";
 
 const testAccount =
-  "0xee34ad8d735cf8c4d984807a4a315a0f007f9c0ba2e0bd097267e2e70d512070";
+  "0xbfe6e6f61455f9150f4da998878088adc18e8bae4fef4e5725f8ba26a8f5605d";
+const testAccount2 =
+  "0xb2e6286dad58b03231709402a3094a10886dd22ffb3751e7b59e709f5df77492";
 const WAL =
   "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL";
 const USDC =
@@ -310,19 +312,55 @@ describe("Momentum test", () => {
 });
 describe("Steamm oracle quoter test", () => {
   it("should routing success for steamm oracle quoter x for y", async () => {
-    await testSwap(client, testAccount, {
+    await testSwap(client, testAccount2, {
       amountIn: amountX,
       tokenIn: tokenX,
-      tokenOut: tokenY,
+      tokenOut: WAL,
       sources: ["steamm_oracle_quoter"],
     });
   });
   it("should routing success for steamm oracle quoter y for x", async () => {
+    await testSwap(client, testAccount2, {
+      amountIn: amountY,
+      tokenIn: WAL,
+      tokenOut: tokenX,
+      sources: ["steamm_oracle_quoter"],
+    });
+  });
+});
+describe("Steamm oracle quoter v2 test", () => {
+  it("should routing success for steamm oracle quoter v2 x for y", async () => {
+    await testSwap(client, testAccount, {
+      amountIn: amountX,
+      tokenIn: tokenX,
+      tokenOut: tokenY,
+      sources: ["steamm_oracle_quoter_v2"],
+    });
+  });
+  it("should routing success for steamm oracle quoter v2 y for x", async () => {
     await testSwap(client, testAccount, {
       amountIn: amountY,
-      tokenIn: USDC,
-      tokenOut: WAL,
-      sources: ["steamm_oracle_quoter"],
+      tokenIn: tokenY,
+      tokenOut: tokenX,
+      sources: ["steamm_oracle_quoter_v2"],
+    });
+  });
+});
+describe("SevenK V1 test", () => {
+  it("should routing success for sevenk v1 x for y", async () => {
+    await testSwap(client, testAccount, {
+      amountIn: amountX,
+      tokenIn: tokenX,
+      tokenOut: tokenY,
+      sources: ["sevenk_v1"],
+    });
+  });
+  it("should routing success for sevenk v1 y for x", async () => {
+    await testSwap(client, testAccount, {
+      amountIn: amountY,
+      tokenIn: tokenY,
+      tokenOut: tokenX,
+      sources: ["sevenk_v1"],
     });
   });
 });

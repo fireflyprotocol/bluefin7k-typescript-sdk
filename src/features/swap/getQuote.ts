@@ -42,9 +42,11 @@ export const DEFAULT_SOURCES: SourceDex[] = [
   "stsui",
   "steamm",
   "steamm_oracle_quoter",
+  "steamm_oracle_quoter_v2",
   "magma",
   "haedal_pmm",
   "momentum",
+  "sevenk_v1",
 ];
 
 export async function getQuote({
@@ -81,7 +83,7 @@ export async function getQuote({
   const response = await fetchClient(`${API_ENDPOINTS.MAIN}/quote?${params}`);
 
   if (!response.ok) {
-    let responseText = "Failed to fetch aggregator quote";
+    let responseText: string;
     try {
       responseText = await response.text();
     } catch {
