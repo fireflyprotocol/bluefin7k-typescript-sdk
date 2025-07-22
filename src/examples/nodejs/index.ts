@@ -1,5 +1,5 @@
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { getQuote, buildTx, getSuiClient } from "@7kprotocol/sdk-ts";
+import { getQuote, buildTx, getSuiClient } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const YOUR_WALLET_ADDRESS = "<YOUR_WALLET>";
 const YOUR_SEEDPHASE = "<YOUR_SEEDPHASE>";

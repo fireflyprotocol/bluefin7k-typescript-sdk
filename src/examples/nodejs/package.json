@@ -1,5 +1,5 @@
 {
-  "name": "test-7k-sdk-node",
+  "name": "test-bluefin-7k-sdk-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@7kprotocol/sdk-ts": "^2.3.2",
+    "@bluefin-exchange/bluefin7k-aggregator-sdk": "^4.1.0",
     "@mysten/sui": "^1.13.0"
   },
   "devDependencies": {
