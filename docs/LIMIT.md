@@ -33,7 +33,11 @@ const tx = await placeLimitOrder({
 Retrieve a list of all open limit orders for a specific account.
 
 ```typescript
+<<<<<<< HEAD
 import { getOpenLimitOrders } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { getOpenLimitOrders } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const openLimitOrders = await getOpenLimitOrders({
   owner: "0xSenderAddress",
@@ -49,7 +53,11 @@ const openLimitOrders = await getOpenLimitOrders({
 Cancel an existing limit order by providing its unique order ID.
 
 ```typescript
+<<<<<<< HEAD
 import { cancelLimitOrder } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { cancelLimitOrder } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const tx = await cancelLimitOrder({
   orderId: "orderId", // The unique order ID (retrieved from getOpenLimitOrders).
@@ -65,7 +73,11 @@ const tx = await cancelLimitOrder({
 Claim assets from an expired limit order.
 
 ```typescript
+<<<<<<< HEAD
 import { claimExpiredLimitOrder } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { claimExpiredLimitOrder } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const tx = await claimExpiredLimitOrder({
   orderId: "orderId", // The unique order ID (retrieved from getOpenLimitOrders).
@@ -81,7 +93,11 @@ const tx = await claimExpiredLimitOrder({
 Retrieve a list of closed or fulfilled limit orders for a specific account.
 
 ```typescript
+<<<<<<< HEAD
 import { getClosedLimitOrders } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+=======
+import { getClosedLimitOrders } from "@7kprotocol/sdk-ts";
+>>>>>>> upstream/main
 
 const closedLimitOrders = await getClosedLimitOrders({
   owner: "0xSenderAddress",
