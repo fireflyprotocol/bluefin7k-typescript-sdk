@@ -166,7 +166,7 @@ export async function getConfig(
   try {
     const response = await fetchClient(`${API_ENDPOINTS.MAIN}/config`);
     const quoteResponse = (await response.json()) as Config;
-    config = { ...config, ...quoteResponse };
+    config = { ...config, ...quoteResponse, swapViaPartner };
     configTs = Date.now();
     return config;
   } catch (_) {
