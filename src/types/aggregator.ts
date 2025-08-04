@@ -27,7 +27,8 @@ export type SourceDex =
   | "magma"
   | "haedal_pmm"
   | "momentum"
-  | "sevenk_v1";
+  | "sevenk_v1"
+  | "fullsail";
 
 export type SorSwap = {
   poolId: string;
@@ -140,8 +141,13 @@ export interface Config {
     partnerAddress: string;
     feePercentage1e6: number;
   };
+  fullsail: DexConfig & {
+    globalConfig: string;
+    rewarderGlobalVault: string;
+    priceProvider: string;
+    stats: string;
+  };
 }
-
 
 export type ExtraOracle = {
   Pyth?: { bytes: number[] };
