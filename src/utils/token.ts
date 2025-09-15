@@ -1,4 +1,4 @@
-import { SUI_FULL_TYPE, SUI_TYPE } from "../constants/tokens.js";
+import { SUI_FULL_TYPE, SUI_TYPE } from "../constants/tokens";
 
 export function normalizeTokenType(type: string) {
   return type === SUI_TYPE ? SUI_FULL_TYPE : type;

@@ -1,7 +1,7 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { ExtraOracle } from "../../../types/aggregator.js";
-import { BaseContract } from "../base.js";
+import { ExtraOracle } from "../../../types/aggregator";
+import { BaseContract } from "../base";
 
 type ObricExtra = {
   oracles: ExtraOracle[];

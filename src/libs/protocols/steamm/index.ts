@@ -4,9 +4,9 @@ import {
   parseStructTag,
   SUI_CLOCK_OBJECT_ID,
 } from "@mysten/sui/utils";
-import { ExtraOracle } from "../../../types/aggregator.js";
-import { SuiUtils } from "../../../utils/sui.js";
-import { BaseContract } from "../base.js";
+import { ExtraOracle } from "../../../types/aggregator";
+import { SuiUtils } from "../../../utils/sui";
+import { BaseContract } from "../base";
 
 export type SteamExtra = {
   bankAStructTag: string;

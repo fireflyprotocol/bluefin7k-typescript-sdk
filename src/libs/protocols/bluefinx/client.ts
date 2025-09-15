@@ -1,5 +1,5 @@
-import { Config } from "../../../config/index.js";
-import { API_ENDPOINTS } from "../../../constants/apiEndpoints.js";
+import { Config } from "../../../config/index";
+import { API_ENDPOINTS } from "../../../constants/apiEndpoints";
 import {
   BluefinXTx,
   SponsorRequest,

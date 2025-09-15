@@ -2,7 +2,7 @@ import {
   Transaction,
   TransactionObjectArgument,
 } from "@mysten/sui/transactions";
-import { Commission, QuoteResponse } from "./aggregator.js";
+import { Commission, QuoteResponse } from "./aggregator";
 
 export interface CommonParams {
   /** Quote response from api */

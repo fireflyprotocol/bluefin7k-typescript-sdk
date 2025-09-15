@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {}
+  },
+  "tsc-alias": {
+    "verbose": false,
+    "resolveFullPaths": true,
+    "fileExtensions": {
+      ".js": [".ts", ".tsx"],
+      ".mjs": [".ts", ".tsx"]
+    }
+  }
+}

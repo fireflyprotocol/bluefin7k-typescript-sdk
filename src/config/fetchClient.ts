@@ -1,4 +1,4 @@
-import { Config } from "./index.js";
+import { Config } from "./index";
 
 export async function fetchClient(
   input: string,

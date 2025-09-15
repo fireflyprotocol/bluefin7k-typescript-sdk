@@ -5,9 +5,9 @@ import {
   SUI_CLOCK_OBJECT_ID,
   toHex,
 } from "@mysten/sui/utils";
-import { ExtraOracle } from "../../../types/aggregator.js";
-import { TransactionResultItem } from "../../../types/sui.js";
-import { BaseContract } from "../base.js";
+import { ExtraOracle } from "../../../types/aggregator";
+import { TransactionResultItem } from "../../../types/sui";
+import { BaseContract } from "../base";
 
 export type SevenKExtra = {
   poolStructTag: string;

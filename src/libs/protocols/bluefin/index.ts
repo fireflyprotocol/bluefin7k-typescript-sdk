@@ -1,8 +1,8 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { BaseContract } from "../base.js";
+import { BaseContract } from "../base";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { getDefaultSqrtPriceLimit } from "../utils.js";
-import { SuiUtils } from "../../../utils/sui.js";
+import { getDefaultSqrtPriceLimit } from "../utils";
+import { SuiUtils } from "../../../utils/sui";
 export class BluefinContract extends BaseContract {
   async swap(tx: Transaction) {
     const [coinX, coinY] = this.swapInfo.pool.allTokens;

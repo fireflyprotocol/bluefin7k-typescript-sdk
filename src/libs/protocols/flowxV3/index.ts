@@ -1,7 +1,7 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { BaseContract } from "../base.js";
-import { getDefaultSqrtPriceLimit } from "../utils.js";
+import { BaseContract } from "../base";
+import { getDefaultSqrtPriceLimit } from "../utils";
 
 export class FlowxV3Contract extends BaseContract {
   async swap(tx: Transaction) {

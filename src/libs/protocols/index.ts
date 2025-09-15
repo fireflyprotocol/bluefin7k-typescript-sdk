@@ -1,24 +1,24 @@
-import { AfterMathContract } from "./aftermath/index.js";
-import { BluefinContract } from "./bluefin/index.js";
-import { BluefinXContract } from "./bluefinx/index.js";
-import { BluemoveContract } from "./bluemove/index.js";
-import { CetusContract } from "./cetus/index.js";
-import { SponsoredDeepBookV3Contract } from "./deepbookV3/sponsored.js";
-import { FlowXContract } from "./flowx/index.js";
-import { FlowxV3Contract } from "./flowxV3/index.js";
-import { FullsailContract } from "./fullsail/index.js";
-import { HaedalPMMContract } from "./haedal_pmm/index.js";
-import { KriyaContract } from "./kriya/index.js";
-import { KriyaV3Contract } from "./kriyaV3/index.js";
-import { MagmaContract } from "./magma/index.js";
-import { MomentumContract } from "./momentum/index.js";
-import { ObricContract } from "./obric/index.js";
-import { SevenKV1 } from "./sevenk/index.js";
-import { SpringSuiContract } from "./springsui/index.js";
-import { SteammContract } from "./steamm/index.js";
-import { StSuiContract } from "./stsui/index.js";
-import { SuiswapContract } from "./suiswap/index.js";
-import { TurbosContract } from "./turbos/index.js";
+import { AfterMathContract } from "./aftermath/index";
+import { BluefinContract } from "./bluefin/index";
+import { BluefinXContract } from "./bluefinx/index";
+import { BluemoveContract } from "./bluemove/index";
+import { CetusContract } from "./cetus/index";
+import { SponsoredDeepBookV3Contract } from "./deepbookV3/sponsored";
+import { FlowXContract } from "./flowx/index";
+import { FlowxV3Contract } from "./flowxV3/index";
+import { FullsailContract } from "./fullsail/index";
+import { HaedalPMMContract } from "./haedal_pmm/index";
+import { KriyaContract } from "./kriya/index";
+import { KriyaV3Contract } from "./kriyaV3/index";
+import { MagmaContract } from "./magma/index";
+import { MomentumContract } from "./momentum/index";
+import { ObricContract } from "./obric/index";
+import { SevenKV1 } from "./sevenk/index";
+import { SpringSuiContract } from "./springsui/index";
+import { SteammContract } from "./steamm/index";
+import { StSuiContract } from "./stsui/index";
+import { SuiswapContract } from "./suiswap/index";
+import { TurbosContract } from "./turbos/index";
 
 export const ProtocolContract = {
   cetus: CetusContract,

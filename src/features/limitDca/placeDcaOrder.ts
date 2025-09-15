@@ -1,4 +1,4 @@
-import { DCA_ORDER_MODULE_ID, GLOBAL_CONFIG_ID } from "./constants.js";
+import { DCA_ORDER_MODULE_ID, GLOBAL_CONFIG_ID } from "./constants";
 import {
   coinWithBalance,
   Transaction,

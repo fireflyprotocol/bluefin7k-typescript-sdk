@@ -1,7 +1,7 @@
-import { fetchClient } from "../../config/fetchClient.js";
-import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
-import { NATIVE_USDC_TOKEN_TYPE, SUI_FULL_TYPE } from "../../constants/tokens.js";
-import { normalizeTokenType } from "../../utils/token.js";
+import { fetchClient } from "../../config/fetchClient";
+import { API_ENDPOINTS } from "../../constants/apiEndpoints";
+import { NATIVE_USDC_TOKEN_TYPE, SUI_FULL_TYPE } from "../../constants/tokens";
+import { normalizeTokenType } from "../../utils/token";
 
 interface TokenPrice {
   price: number;

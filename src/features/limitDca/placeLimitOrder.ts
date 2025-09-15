@@ -1,6 +1,6 @@
-import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx.js";
-import { denormalizeTokenType } from "../../utils/token.js";
-import { GLOBAL_CONFIG_ID, LIMIT_ORDER_MODULE_ID } from "./constants.js";
+import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx";
+import { denormalizeTokenType } from "../../utils/token";
+import { GLOBAL_CONFIG_ID, LIMIT_ORDER_MODULE_ID } from "./constants";
 
 export interface PlaceLimitOrderParams {
   accountAddress: string;

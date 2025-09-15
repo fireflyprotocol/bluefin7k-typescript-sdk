@@ -4,14 +4,14 @@ import {
   TransactionResult,
 } from "@mysten/sui/transactions";
 import { isValidSuiAddress, toBase64, toHex } from "@mysten/sui/utils";
-import { Config } from "../../config/index.js";
-import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../../constants/_7k.js";
-import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx.js";
-import { groupSwapRoutes } from "../../libs/groupSwapRoutes.js";
-import { BluefinXExtra } from "../../libs/protocols/bluefinx/index.js";
-import { sponsorBluefinX } from "../../libs/protocols/bluefinx/client.js";
-import { BluefinXTx } from "../../libs/protocols/bluefinx/types.js";
-import { swapWithRoute } from "../../libs/swapWithRoute.js";
+import { Config } from "../../config/index";
+import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../../constants/_7k";
+import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx";
+import { groupSwapRoutes } from "../../libs/groupSwapRoutes";
+import { BluefinXExtra } from "../../libs/protocols/bluefinx/index";
+import { sponsorBluefinX } from "../../libs/protocols/bluefinx/client";
+import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
+import { swapWithRoute } from "../../libs/swapWithRoute";
 import {
   BuildTxResult,
   ExtraOracle,
@@ -19,11 +19,11 @@ import {
   QuoteResponse,
   TxSorSwap,
 } from "../../types/aggregator";
-import { BuildTxParams } from "../../types/tx.js";
-import { SuiUtils } from "../../utils/sui.js";
-import { denormalizeTokenType } from "../../utils/token.js";
-import { getConfig } from "./config.js";
-import { ORACLE_BASED_SOURCES } from "./getQuote.js";
+import { BuildTxParams } from "../../types/tx";
+import { SuiUtils } from "../../utils/sui";
+import { denormalizeTokenType } from "../../utils/token";
+import { getConfig } from "./config";
+import { ORACLE_BASED_SOURCES } from "./getQuote";
 
 export const buildTx = async ({
   quoteResponse,

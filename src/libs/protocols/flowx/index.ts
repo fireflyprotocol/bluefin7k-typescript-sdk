@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { BaseContract } from "../base.js";
+import { BaseContract } from "../base";
 
 export class FlowXContract extends BaseContract {
   async swap(tx: Transaction) {
