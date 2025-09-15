@@ -1,9 +1,9 @@
 import { SUI_DECIMALS } from "@mysten/sui/utils";
-import { Config } from "../../config";
+import { Config } from "../../config/index";
 import { isBluefinXRouting } from "../../types/aggregator";
 import { EstimateGasFeeParams } from "../../types/tx";
 import { formatBalance } from "../../utils/number";
-import { getSuiPrice } from "../prices";
+import { getSuiPrice } from "../prices/index";
 import { buildTx } from "./buildTx";
 import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
 

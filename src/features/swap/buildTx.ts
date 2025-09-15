@@ -4,11 +4,11 @@ import {
   TransactionResult,
 } from "@mysten/sui/transactions";
 import { isValidSuiAddress, toBase64, toHex } from "@mysten/sui/utils";
-import { Config } from "../../config";
+import { Config } from "../../config/index";
 import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../../constants/_7k";
 import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx";
 import { groupSwapRoutes } from "../../libs/groupSwapRoutes";
-import { BluefinXExtra } from "../../libs/protocols/bluefinx";
+import { BluefinXExtra } from "../../libs/protocols/bluefinx/index";
 import { sponsorBluefinX } from "../../libs/protocols/bluefinx/client";
 import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
 import { swapWithRoute } from "../../libs/swapWithRoute";

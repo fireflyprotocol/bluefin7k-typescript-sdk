@@ -1,8 +1,8 @@
 export * from "./types/aggregator";
 
-import { Config } from "./config";
+import { Config } from "./config/index";
 
-import { getSuiPrice, getTokenPrice, getTokenPrices } from "./features/prices";
+import { getSuiPrice, getTokenPrice, getTokenPrices } from "./features/prices/index";
 import { executeBluefinTx } from "./libs/protocols/bluefinx/client";
 
 import {
@@ -12,7 +12,7 @@ import {
   getQuote,
   getSwapHistory,
   DEFAULT_SOURCES,
-} from "./features/swap";
+} from "./features/swap/index";
 
 import {
   cancelDcaOrder,
@@ -25,7 +25,7 @@ import {
   getOpenLimitOrders,
   placeDcaOrder,
   placeLimitOrder,
-} from "./features/limitDca";
+} from "./features/limitDca/index";
 
 // avoid breaking changes
 const getSuiClient = Config.getSuiClient;

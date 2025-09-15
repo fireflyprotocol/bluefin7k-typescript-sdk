@@ -1,5 +1,5 @@
 import { CoinStruct, PaginatedCoins } from "@mysten/sui/client";
-import { Config } from "../config";
+import { Config } from "../config/index";
 
 const orderByKey = <T extends object>(
   array: T[],

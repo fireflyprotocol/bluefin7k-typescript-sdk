@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { ProtocolContract } from "./protocols";
+import { ProtocolContract } from "./protocols/index";
 import { Config, TxSorSwap } from "../types/aggregator";
 import { TransactionResultItem } from "../types/sui";
 

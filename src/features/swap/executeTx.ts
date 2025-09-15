@@ -2,7 +2,7 @@ import {
   SuiTransactionBlockResponse,
   SuiTransactionBlockResponseOptions,
 } from "@mysten/sui/client";
-import { Config } from "../../config";
+import { Config } from "../../config/index";
 import { executeBluefinTx } from "../../libs/protocols/bluefinx/client";
 import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
 import { AggregatorTx } from "../../types/aggregator";

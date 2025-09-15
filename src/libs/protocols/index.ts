@@ -1,24 +1,24 @@
-import { AfterMathContract } from "./aftermath";
-import { BluefinContract } from "./bluefin";
-import { BluefinXContract } from "./bluefinx";
-import { BluemoveContract } from "./bluemove";
-import { CetusContract } from "./cetus";
+import { AfterMathContract } from "./aftermath/index";
+import { BluefinContract } from "./bluefin/index";
+import { BluefinXContract } from "./bluefinx/index";
+import { BluemoveContract } from "./bluemove/index";
+import { CetusContract } from "./cetus/index";
 import { SponsoredDeepBookV3Contract } from "./deepbookV3/sponsored";
-import { FlowXContract } from "./flowx";
-import { FlowxV3Contract } from "./flowxV3";
-import { FullsailContract } from "./fullsail";
-import { HaedalPMMContract } from "./haedal_pmm";
-import { KriyaContract } from "./kriya";
-import { KriyaV3Contract } from "./kriyaV3";
-import { MagmaContract } from "./magma";
-import { MomentumContract } from "./momentum";
-import { ObricContract } from "./obric";
-import { SevenKV1 } from "./sevenk";
-import { SpringSuiContract } from "./springsui";
-import { SteammContract } from "./steamm";
-import { StSuiContract } from "./stsui";
-import { SuiswapContract } from "./suiswap";
-import { TurbosContract } from "./turbos";
+import { FlowXContract } from "./flowx/index";
+import { FlowxV3Contract } from "./flowxV3/index";
+import { FullsailContract } from "./fullsail/index";
+import { HaedalPMMContract } from "./haedal_pmm/index";
+import { KriyaContract } from "./kriya/index";
+import { KriyaV3Contract } from "./kriyaV3/index";
+import { MagmaContract } from "./magma/index";
+import { MomentumContract } from "./momentum/index";
+import { ObricContract } from "./obric/index";
+import { SevenKV1 } from "./sevenk/index";
+import { SpringSuiContract } from "./springsui/index";
+import { SteammContract } from "./steamm/index";
+import { StSuiContract } from "./stsui/index";
+import { SuiswapContract } from "./suiswap/index";
+import { TurbosContract } from "./turbos/index";
 
 export const ProtocolContract = {
   cetus: CetusContract,
