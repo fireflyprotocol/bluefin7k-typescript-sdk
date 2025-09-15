@@ -1,9 +1,9 @@
 import { Transaction } from "@mysten/sui/transactions";
 
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { BaseContract } from "../base";
-import { getDefaultSqrtPriceLimit } from "../utils";
-import { SuiUtils } from "../../../utils/sui";
+import { BaseContract } from "../base.js";
+import { getDefaultSqrtPriceLimit } from "../utils.js";
+import { SuiUtils } from "../../../utils/sui.js";
 
 const ONE_MINUTE = 60 * 1000;
 

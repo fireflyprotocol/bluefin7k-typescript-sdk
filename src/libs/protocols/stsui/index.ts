@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_SYSTEM_STATE_OBJECT_ID } from "@mysten/sui/utils";
-import { BaseContract } from "../base";
+import { BaseContract } from "../base.js";
 
 export class StSuiContract extends BaseContract {
   async swap(tx: Transaction) {

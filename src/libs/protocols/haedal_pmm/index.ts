@@ -1,8 +1,8 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { ExtraOracle } from "../../../types/aggregator";
-import { SuiUtils } from "../../../utils/sui";
-import { BaseContract } from "../base";
+import { ExtraOracle } from "../../../types/aggregator.js";
+import { SuiUtils } from "../../../utils/sui.js";
+import { BaseContract } from "../base.js";
 
 type HaedalPMMExtra = {
   oracles: ExtraOracle[];

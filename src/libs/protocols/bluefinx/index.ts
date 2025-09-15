@@ -5,8 +5,8 @@ import {
   normalizeStructTag,
   SUI_CLOCK_OBJECT_ID,
 } from "@mysten/sui/utils";
-import { SuiUtils } from "../../../utils/sui";
-import { BaseContract } from "../base";
+import { SuiUtils } from "../../../utils/sui.js";
+import { BaseContract } from "../base.js";
 
 const BcsQuote = bcs.struct("Quote", {
   vault: bcs.Address,

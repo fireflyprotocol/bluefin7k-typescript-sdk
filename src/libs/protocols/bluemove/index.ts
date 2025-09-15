@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { BaseContract } from "../base";
-import { SuiUtils } from "../../../utils/sui";
+import { BaseContract } from "../base.js";
+import { SuiUtils } from "../../../utils/sui.js";
 
 export class BluemoveContract extends BaseContract {
   async swap(tx: Transaction) {

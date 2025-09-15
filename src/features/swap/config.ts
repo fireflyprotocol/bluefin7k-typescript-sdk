@@ -1,6 +1,6 @@
-import { fetchClient } from "../../config/fetchClient";
-import { API_ENDPOINTS } from "../../constants/apiEndpoints";
-import { Config } from "../../types/aggregator";
+import { fetchClient } from "../../config/fetchClient.js";
+import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
+import { Config } from "../../types/aggregator.js";
 
 export const DEFAULT_CONFIG: Config = {
   aftermath: {

@@ -1,9 +1,9 @@
-export * from "./types/aggregator";
+export * from "./types/aggregator.js";
 
-import { Config } from "./config";
+import { Config } from "./config/index.js";
 
-import { getSuiPrice, getTokenPrice, getTokenPrices } from "./features/prices";
-import { executeBluefinTx } from "./libs/protocols/bluefinx/client";
+import { getSuiPrice, getTokenPrice, getTokenPrices } from "./features/prices/index.js";
+import { executeBluefinTx } from "./libs/protocols/bluefinx/client.js";
 
 import {
   buildTx,
@@ -12,7 +12,7 @@ import {
   getQuote,
   getSwapHistory,
   DEFAULT_SOURCES,
-} from "./features/swap";
+} from "./features/swap/index.js";
 
 import {
   cancelDcaOrder,
@@ -25,7 +25,7 @@ import {
   getOpenLimitOrders,
   placeDcaOrder,
   placeLimitOrder,
-} from "./features/limitDca";
+} from "./features/limitDca/index.js";
 
 // avoid breaking changes
 const getSuiClient = Config.getSuiClient;

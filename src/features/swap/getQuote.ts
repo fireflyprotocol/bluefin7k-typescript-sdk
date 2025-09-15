@@ -1,6 +1,6 @@
 import { normalizeStructTag, normalizeSuiObjectId } from "@mysten/sui/utils";
-import { fetchClient } from "../../config/fetchClient";
-import { API_ENDPOINTS } from "../../constants/apiEndpoints";
+import { fetchClient } from "../../config/fetchClient.js";
+import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
 import {
   isBluefinXRouting,
   QuoteResponse,

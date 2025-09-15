@@ -2,7 +2,7 @@ import {
   Transaction,
   TransactionObjectArgument,
 } from "@mysten/sui/transactions";
-import { BluefinXTx } from "../libs/protocols/bluefinx/types";
+import { BluefinXTx } from "../libs/protocols/bluefinx/types.js";
 export { BluefinXTx };
 
 export type SourceDex =

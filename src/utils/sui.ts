@@ -5,9 +5,9 @@ import {
 } from "@mysten/sui/client";
 import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
 import { parseStructTag } from "@mysten/sui/utils";
-import { Config } from "../config";
-import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../constants/_7k";
-import { checkIsSui } from "./token";
+import { Config } from "../config/index.js";
+import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../constants/_7k.js";
+import { checkIsSui } from "./token.js";
 
 type DataPage<T> = {
   data: T[];

@@ -1,24 +1,24 @@
-import { AfterMathContract } from "./aftermath";
-import { BluefinContract } from "./bluefin";
-import { BluefinXContract } from "./bluefinx";
-import { BluemoveContract } from "./bluemove";
-import { CetusContract } from "./cetus";
-import { SponsoredDeepBookV3Contract } from "./deepbookV3/sponsored";
-import { FlowXContract } from "./flowx";
-import { FlowxV3Contract } from "./flowxV3";
-import { FullsailContract } from "./fullsail";
-import { HaedalPMMContract } from "./haedal_pmm";
-import { KriyaContract } from "./kriya";
-import { KriyaV3Contract } from "./kriyaV3";
-import { MagmaContract } from "./magma";
-import { MomentumContract } from "./momentum";
-import { ObricContract } from "./obric";
-import { SevenKV1 } from "./sevenk";
-import { SpringSuiContract } from "./springsui";
-import { SteammContract } from "./steamm";
-import { StSuiContract } from "./stsui";
-import { SuiswapContract } from "./suiswap";
-import { TurbosContract } from "./turbos";
+import { AfterMathContract } from "./aftermath/index.js";
+import { BluefinContract } from "./bluefin/index.js";
+import { BluefinXContract } from "./bluefinx/index.js";
+import { BluemoveContract } from "./bluemove/index.js";
+import { CetusContract } from "./cetus/index.js";
+import { SponsoredDeepBookV3Contract } from "./deepbookV3/sponsored.js";
+import { FlowXContract } from "./flowx/index.js";
+import { FlowxV3Contract } from "./flowxV3/index.js";
+import { FullsailContract } from "./fullsail/index.js";
+import { HaedalPMMContract } from "./haedal_pmm/index.js";
+import { KriyaContract } from "./kriya/index.js";
+import { KriyaV3Contract } from "./kriyaV3/index.js";
+import { MagmaContract } from "./magma/index.js";
+import { MomentumContract } from "./momentum/index.js";
+import { ObricContract } from "./obric/index.js";
+import { SevenKV1 } from "./sevenk/index.js";
+import { SpringSuiContract } from "./springsui/index.js";
+import { SteammContract } from "./steamm/index.js";
+import { StSuiContract } from "./stsui/index.js";
+import { SuiswapContract } from "./suiswap/index.js";
+import { TurbosContract } from "./turbos/index.js";
 
 export const ProtocolContract = {
   cetus: CetusContract,
