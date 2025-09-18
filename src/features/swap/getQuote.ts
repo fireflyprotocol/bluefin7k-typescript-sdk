@@ -96,7 +96,7 @@ export async function getQuote({
   if (taker) {
     params.append("taker", taker);
   }
-  const response = await fetchClient(`${API_ENDPOINTS.MAIN}/quote?${params}`);
+  const response = await fetchClient(`${API_ENDPOINTS.BLUEFIN_AGG}/quote?${params}`);
 
   if (!response.ok) {
     let responseText: string;
