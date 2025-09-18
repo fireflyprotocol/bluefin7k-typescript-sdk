@@ -176,7 +176,7 @@ export async function getConfig(
   }
 
   try {
-    const response = await fetchClient(`${API_ENDPOINTS.BLUEFIN_AGG}/config`);
+    const response = await fetchClient(`${API_ENDPOINTS.MAIN}/config`);
     const quoteResponse = (await response.json()) as Config;
     config = { ...config, ...quoteResponse, swapViaPartner };
     configTs = Date.now();
