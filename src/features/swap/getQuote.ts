@@ -65,14 +65,19 @@ export async function getQuote(
     tokenIn,
     tokenOut,
     amountIn,
-    sources = DEFAULT_SOURCES,
+    sources: _sources = DEFAULT_SOURCES,
     commissionBps,
     targetPools,
     excludedPools,
     taker,
+    isSponsored,
   }: Params,
   requestInit?: RequestInit
 ) {
+  let sources = _sources;
+  if (isSponsored) {
+    sources = _sources.filter((s) => !ORACLE_BASED_SOURCES.has(s));
+  }
   const params = new URLSearchParams({
     amount: amountIn,
     from: normalizeStructTag(tokenIn),
