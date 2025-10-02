@@ -72,7 +72,7 @@ export async function getQuote(
     taker,
     isSponsored,
   }: Params,
-  requestInit: RequestInit
+  requestInit?: RequestInit
 ) {
   let sources = _sources;
   if (isSponsored) {
