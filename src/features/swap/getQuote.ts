@@ -60,21 +60,19 @@ export const ORACLE_BASED_SOURCES = new Set<SourceDex>([
   "steamm_oracle_quoter_v2",
 ]);
 
-export async function getQuote({
-  tokenIn,
-  tokenOut,
-  amountIn,
-  sources: _sources = DEFAULT_SOURCES,
-  commissionBps,
-  targetPools,
-  excludedPools,
-  taker,
-  isSponsored,
-}: Params) {
-  let sources = _sources;
-  if (isSponsored) {
-    sources = _sources.filter((s) => !ORACLE_BASED_SOURCES.has(s));
-  }
+export async function getQuote(
+  {
+    tokenIn,
+    tokenOut,
+    amountIn,
+    sources = DEFAULT_SOURCES,
+    commissionBps,
+    targetPools,
+    excludedPools,
+    taker,
+  }: Params,
+  requestInit?: RequestInit
+) {
   const params = new URLSearchParams({
     amount: amountIn,
     from: normalizeStructTag(tokenIn),
@@ -84,19 +82,22 @@ export async function getQuote({
   if (targetPools?.length) {
     params.append(
       "target_pools",
-      targetPools.map((v) => normalizeSuiObjectId(v)).join(","),
+      targetPools.map((v) => normalizeSuiObjectId(v)).join(",")
     );
   }
   if (excludedPools?.length) {
     params.append(
       "excluded_pools",
-      excludedPools.map((v) => normalizeSuiObjectId(v)).join(","),
+      excludedPools.map((v) => normalizeSuiObjectId(v)).join(",")
     );
   }
   if (taker) {
     params.append("taker", taker);
   }
-  const response = await fetchClient(`${API_ENDPOINTS.MAIN}/v2/quote?${params}`);
+  const response = await fetchClient(
+    `${API_ENDPOINTS.MAIN}/quote?${params}`,
+    requestInit
+  );
 
   if (!response.ok) {
     let responseText: string;
@@ -115,7 +116,7 @@ export async function getQuote({
 
 const computeReturnAmountAfterCommission = (
   quoteResponse: QuoteResponse,
-  commissionBps?: number,
+  commissionBps?: number
 ) => {
   const _commissionBps = isBluefinXRouting(quoteResponse) ? 0 : commissionBps;
   if (quoteResponse.returnAmount && +quoteResponse.returnAmount > 0) {
@@ -125,7 +126,7 @@ const computeReturnAmountAfterCommission = (
       BigInt(10_000)
     ).toString(10);
     const exp = Math.round(
-      +quoteResponse.returnAmountWithDecimal / +quoteResponse.returnAmount,
+      +quoteResponse.returnAmountWithDecimal / +quoteResponse.returnAmount
     );
     quoteResponse.returnAmountAfterCommission = (
       +quoteResponse.returnAmountAfterCommissionWithDecimal / exp
