@@ -100,7 +100,7 @@ export async function getQuote(
     params.append("taker", taker);
   }
   const response = await fetchClient(
-    `${API_ENDPOINTS.MAIN}/quote?${params}`,
+    `${API_ENDPOINTS.MAIN}/v2/quote?${params}`,
     requestInit
   );
 
