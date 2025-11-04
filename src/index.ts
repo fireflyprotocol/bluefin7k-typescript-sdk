@@ -1,8 +1,13 @@
 export * from "./types/aggregator";
 
 import { Config } from "./config/index";
+import { setMainEndpoint } from "./constants/apiEndpoints";
 
-import { getSuiPrice, getTokenPrice, getTokenPrices } from "./features/prices/index";
+import {
+  getSuiPrice,
+  getTokenPrice,
+  getTokenPrices,
+} from "./features/prices/index";
 import { executeBluefinTx } from "./libs/protocols/bluefinx/client";
 
 import {
@@ -52,6 +57,7 @@ export {
   executeTx,
   executeBluefinTx,
   DEFAULT_SOURCES,
+  setMainEndpoint,
 
   // limit order
   placeLimitOrder,
@@ -89,6 +95,7 @@ export default {
   executeTx,
   executeBluefinTx,
   DEFAULT_SOURCES,
+  setMainEndpoint,
 
   // limit order
   placeLimitOrder,

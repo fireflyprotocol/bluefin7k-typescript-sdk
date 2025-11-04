@@ -1,6 +1,9 @@
 import { normalizeStructTag, normalizeSuiObjectId } from "@mysten/sui/utils";
 import { fetchClient } from "../../config/fetchClient";
-import { API_ENDPOINTS } from "../../constants/apiEndpoints";
+import {
+  getMainEndpointUrl,
+  MAIN_ENDPOINT,
+} from "../../constants/apiEndpoints";
 import {
   isBluefinXRouting,
   QuoteResponse,
@@ -99,8 +102,11 @@ export async function getQuote(
   if (taker) {
     params.append("taker", taker);
   }
+
+  const path = MAIN_ENDPOINT === "Bluefin7k" ? `v2/quote` : `quote`;
+
   const response = await fetchClient(
-    `${API_ENDPOINTS.MAIN}/v2/quote?${params}`,
+    `${getMainEndpointUrl()}/${path}?${params}`,
     requestInit
   );
 
