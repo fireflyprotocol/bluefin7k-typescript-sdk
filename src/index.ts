@@ -2,7 +2,11 @@ export * from "./types/aggregator";
 
 import { Config } from "./config/index";
 
-import { getSuiPrice, getTokenPrice, getTokenPrices } from "./features/prices/index";
+import {
+  getSuiPrice,
+  getTokenPrice,
+  getTokenPrices,
+} from "./features/prices/index";
 import { executeBluefinTx } from "./libs/protocols/bluefinx/client";
 
 import {

@@ -1,5 +1,5 @@
 import { fetchClient } from "../../config/fetchClient";
-import { API_ENDPOINTS } from "../../constants/apiEndpoints";
+import { getMainEndpointUrl } from "../../constants/apiEndpoints";
 import { Config } from "../../types/aggregator";
 
 export const DEFAULT_CONFIG: Config = {
@@ -176,7 +176,7 @@ export async function getConfig(
   }
 
   try {
-    const response = await fetchClient(`${API_ENDPOINTS.MAIN}/config`);
+    const response = await fetchClient(`${getMainEndpointUrl()}/config`);
     const quoteResponse = (await response.json()) as Config;
     config = { ...config, ...quoteResponse, swapViaPartner };
     configTs = Date.now();

@@ -4,6 +4,8 @@ import {
   SuiPythClient,
 } from "@pythnetwork/pyth-sui-js";
 
+type EndpointProvider = "7k" | "Bluefin7k";
+
 const HERMES_API = "https://hermes.pyth.network";
 const WORMHOLE_STATE_ID =
   "0xaeab97f96cf9877fee2883315d459552b2b921edc16d7ceac6eab944dd88919c";
@@ -23,6 +25,7 @@ let pythClient: SuiPythClient = new SuiPythClient(
 let pythConnection: SuiPriceServiceConnection = new SuiPriceServiceConnection(
   HERMES_API,
 );
+let endpointProvider: EndpointProvider = "Bluefin7k";
 
 function setApiKey(key: string): void {
   apiKey = key;
@@ -64,6 +67,14 @@ function getPythConnection(): SuiPriceServiceConnection {
   return pythConnection;
 }
 
+function setEndpointProvider(provider: EndpointProvider): void {
+  endpointProvider = provider;
+}
+
+function getEndpointProvider(): EndpointProvider {
+  return endpointProvider;
+}
+
 const Config = {
   setApiKey,
   getApiKey,
@@ -75,6 +86,8 @@ const Config = {
   getPythClient,
   setPythConnection,
   getPythConnection,
+  setEndpointProvider,
+  getEndpointProvider,
 };
 
 export { Config };
