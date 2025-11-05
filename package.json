@@ -74,5 +74,8 @@
   "peerDependencies": {
     "@mysten/sui": "^1.33.0",
     "@pythnetwork/pyth-sui-js": "^2.1.0"
+  },
+  "dependencies": {
+    "uuid": "^13.0.0"
   }
 }
