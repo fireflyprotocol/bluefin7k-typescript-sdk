@@ -7,6 +7,7 @@ import {
   QuoteResponse,
   SourceDex,
 } from "../../types/aggregator";
+import { v4 as uuidv4 } from "uuid";
 
 interface Params {
   tokenIn: string;
@@ -103,6 +104,19 @@ export async function getQuote(
 
   const path =
     Config.getEndpointProvider() === "Bluefin7k" ? `v2/quote` : `quote`;
+
+  if (path === "v2/quote") {
+    const requestId = uuidv4();
+    const headers = {
+      "x-request-id": requestId,
+      ...requestInit?.headers,
+    };
+
+    requestInit = {
+      ...requestInit,
+      headers,
+    };
+  }
 
   const response = await fetchClient(
     `${getMainEndpointUrl()}/${path}?${params}`,
