@@ -14,6 +14,7 @@ const PYTH_STATE_ID =
 
 let apiKey: string = "";
 let bluefinXApiKey: string = "";
+let bluefinAggregatorApiKey: string = "";
 let suiClient: SuiClient = new SuiClient({
   url: getFullnodeUrl("mainnet"),
 });
@@ -41,6 +42,14 @@ function setBluefinXApiKey(key: string): void {
 
 function getBluefinXApiKey(): string {
   return bluefinXApiKey;
+}
+
+function setBluefinAggregatorApiKey(key: string): void {
+  bluefinAggregatorApiKey = key;
+}
+
+function getBluefinAggregatorApiKey(): string {
+  return bluefinAggregatorApiKey;
 }
 
 function getSuiClient(): SuiClient {
@@ -80,6 +89,8 @@ const Config = {
   getApiKey,
   setBluefinXApiKey,
   getBluefinXApiKey,
+  setBluefinAggregatorApiKey,
+  getBluefinAggregatorApiKey,
   setSuiClient,
   getSuiClient,
   setPythClient,
