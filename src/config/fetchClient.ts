@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import { Config } from "./index";
 
 export async function fetchClient(
@@ -16,7 +17,7 @@ export async function fetchClient(
     headers.set("Bluefin-X-API-Key", bluefinXApiKey);
   }
 
-  if (bluefinAggregatorApiKey) {
+  if (bluefinAggregatorApiKey && input.includes(API_ENDPOINTS.MAIN)) {
     headers.set("Bluefin-Aggregator-API-Key", bluefinAggregatorApiKey);
   }
 
