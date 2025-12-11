@@ -158,6 +158,31 @@ export const DEFAULT_CONFIG: Config = {
       "0x854b2d2c0381bb656ec962f8b443eb082654384cf97885359d1956c7d76e33c9",
     stats: "0x6822a33d1d971e040c32f7cc74507010d1fe786f7d06ab89135083ddb07d2dc2",
   },
+  cetus_dlmm: {
+    name: "Cetus DLMM",
+    package:
+      "0xa4c6f46bd6b456e6477bcddf0652e0d2d8fb4767e306533e6e885302ee28cfab",
+    globalConfig:
+      "0xf31b605d117f959b9730e8c07b08b856cb05143c5e81d5751c90d2979e82f599",
+    version:
+      "0x05370b2d656612dd5759cbe80463de301e3b94a921dfc72dd9daa2ecdeb2d0a8",
+  },
+  ferra_dlmm: {
+    name: "Ferra DLMM",
+    package:
+      "0x01aca2702b2402f13eacdf9f3e49f5d1bdd3ec5cc7d11847cf8acbaef1cb6d5c",
+    globalConfig:
+      "0x5c9dacf5a678ea15b8569d65960330307e23d429289ca380e665b1aa175ebeca",
+  },
+  ferra_clmm: {
+    name: "Ferra CLMM",
+    package:
+      "0xc895342d87127c9c67b76c8ad7f9a22b8bfe1dcdc2c5af82bd85266783115e31",
+    integrate:
+      "0x1dd5538aeb1066315969d87ae9a920ce2692824385342f49854b764ac730a64b",
+    globalConfig:
+      "0x2cd8382c19e6994f16df204e9b8cddd04bdc486c251de75ac66ac4e48e3e7081",
+  },
 };
 
 let config: Config | null = DEFAULT_CONFIG;

@@ -52,6 +52,9 @@ export const DEFAULT_SOURCES: SourceDex[] = [
   "momentum",
   "sevenk_v1",
   "fullsail",
+  "cetus_dlmm",
+  "ferra_dlmm",
+  "ferra_clmm",
 ];
 
 export const ORACLE_BASED_SOURCES = new Set<SourceDex>([
