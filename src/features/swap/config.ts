@@ -21,7 +21,7 @@ export const DEFAULT_CONFIG: Config = {
   bluefin: {
     name: "Bluefin",
     package:
-      "0x67b34b728c4e28e704dcfecf7c5cf55c7fc593b6c65c20d1836d97c209c1928a",
+      "0xd075338d105482f1527cbfd363d6413558f184dec36d9138a70261e87f486e9c",
     globalConfig:
       "0x03db251ba509a8d5d8777b6338836082335d93eecbdd09a11e190a1cff51c352",
   },
@@ -181,7 +181,8 @@ export async function getConfig(
     config = { ...config, ...quoteResponse, swapViaPartner };
     configTs = Date.now();
     return config;
-  } catch (_) {
+  } catch (error) {
+    console.log("Warning: falling back to default config in getConfig" + error)
     return DEFAULT_CONFIG;
   }
 }
