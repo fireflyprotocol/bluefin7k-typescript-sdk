@@ -181,7 +181,8 @@ export async function getConfig(
     config = { ...config, ...quoteResponse, swapViaPartner };
     configTs = Date.now();
     return config;
-  } catch (_) {
+  } catch (error) {
+    console.log("Warning: falling back to default config in getConfig" + error)
     return DEFAULT_CONFIG;
   }
 }
