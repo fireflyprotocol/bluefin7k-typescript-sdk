@@ -1,6 +1,6 @@
 {
   "name": "@bluefin-exchange/bluefin7k-aggregator-sdk",
-  "version": "5.1.5",
+  "version": "5.1.6",
   "description": "",
   "exports": {
     ".": {
@@ -72,7 +72,7 @@
     "typescript-eslint": "^8.34.1"
   },
   "peerDependencies": {
-    "@mysten/sui": "^1.33.0",
+    "@mysten/sui": "^1.44.0",
     "@pythnetwork/pyth-sui-js": "^2.1.0"
   },
   "dependencies": {
