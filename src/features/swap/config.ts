@@ -161,7 +161,7 @@ export const DEFAULT_CONFIG: Config = {
   cetus_dlmm: {
     name: "Cetus DLMM",
     package:
-      "0xa4c6f46bd6b456e6477bcddf0652e0d2d8fb4767e306533e6e885302ee28cfab",
+      "0x00315207835c4f8a3076a0c801e243962643833a53db2c140ea99d5f836f6bd0",
     globalConfig:
       "0xf31b605d117f959b9730e8c07b08b856cb05143c5e81d5751c90d2979e82f599",
     version:
