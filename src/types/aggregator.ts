@@ -18,6 +18,7 @@ export type SourceDex =
   | "flowx_v3"
   | "bluefin"
   | "bluefinx"
+  | "RFQ"
   | "springsui"
   | "obric"
   | "stsui"
@@ -165,15 +166,16 @@ export const isSuiTransaction = (tx: AggregatorTx): tx is Transaction =>
   tx instanceof Transaction;
 
 /**
- * Check if the sor response is a bluefinx routing
+ * Check if the sor response is a bluefinx routing (V1 or RFQ V2)
  * @param sor
  * @returns boolean
  */
 export const isBluefinXRouting = (sor: QuoteResponse) => {
+  const poolType = sor.routes?.[0]?.hops?.[0]?.pool?.type;
   return (
     sor.routes?.length === 1 &&
     sor.routes[0].hops.length === 1 &&
-    sor.routes[0].hops[0].pool.type === "bluefinx"
+    (poolType === "bluefinx" || poolType === "RFQ")
   );
 };
 

@@ -46,7 +46,7 @@ export const ProtocolContract = {
   haedal_pmm: HaedalPMMContract,
   momentum: MomentumContract,
   bluefinx: BluefinXContract,
-  bluefinxV2: BluefinXV2Contract,
+  RFQ: BluefinXV2Contract,
   sevenk_v1: SevenKV1,
   fullsail: FullsailContract,
   cetus_dlmm: CetusDLMMContract,
