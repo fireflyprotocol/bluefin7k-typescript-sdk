@@ -14,7 +14,7 @@ export async function getTokenPrice(
 ): Promise<number> {
   try {
     const response = await fetchClient(
-      `${API_ENDPOINTS.PRICES}/price?ids=${normalizeTokenType(id)}&vsCoin=${vsCoin}`,
+      `${API_ENDPOINTS.MAIN}/price?ids=${normalizeTokenType(id)}&vsCoin=${vsCoin}`,
     );
     const pricesRes = (await response.json()) as Record<string, TokenPrice>;
     return Number(pricesRes?.[id]?.price || 0);
@@ -43,7 +43,7 @@ export async function getTokenPrices(
 
     const responses = await Promise.all(
       idChunks.map(async (chunk) => {
-        const response = await fetchClient(`${API_ENDPOINTS.PRICES}/price`, {
+        const response = await fetchClient(`${API_ENDPOINTS.MAIN}/price`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
