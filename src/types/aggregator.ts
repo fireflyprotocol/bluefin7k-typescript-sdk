@@ -166,16 +166,16 @@ export const isSuiTransaction = (tx: AggregatorTx): tx is Transaction =>
   tx instanceof Transaction;
 
 /**
- * Check if the sor response is a bluefinx routing (V1 or RFQ V2)
+ * Check if the sor response is a bluefinx V1 routing (requires sponsorship + last look)
+ * Note: RFQ (V2) is NOT included here - it executes as regular PTB without sponsorship
  * @param sor
  * @returns boolean
  */
 export const isBluefinXRouting = (sor: QuoteResponse) => {
-  const poolType = sor.routes?.[0]?.hops?.[0]?.pool?.type;
   return (
     sor.routes?.length === 1 &&
     sor.routes[0].hops.length === 1 &&
-    (poolType === "bluefinx" || poolType === "RFQ")
+    sor.routes[0].hops[0].pool.type === "bluefinx"
   );
 };
 
