@@ -18,6 +18,7 @@ export type SourceDex =
   | "flowx_v3"
   | "bluefin"
   | "bluefinx"
+  | "RFQ"
   | "springsui"
   | "obric"
   | "stsui"
@@ -165,7 +166,8 @@ export const isSuiTransaction = (tx: AggregatorTx): tx is Transaction =>
   tx instanceof Transaction;
 
 /**
- * Check if the sor response is a bluefinx routing
+ * Check if the sor response is a bluefinx V1 routing (requires sponsorship + last look)
+ * Note: RFQ (V2) is NOT included here - it executes as regular PTB without sponsorship
  * @param sor
  * @returns boolean
  */

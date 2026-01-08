@@ -1,6 +1,7 @@
 import { AfterMathContract } from "./aftermath/index";
 import { BluefinContract } from "./bluefin/index";
 import { BluefinXContract } from "./bluefinx/index";
+import { BluefinXV2Contract } from "./bluefinxV2/index";
 import { BluemoveContract } from "./bluemove/index";
 import { CetusContract } from "./cetus/index";
 import { CetusDLMMContract } from "./cetus_dlmm";
@@ -45,6 +46,7 @@ export const ProtocolContract = {
   haedal_pmm: HaedalPMMContract,
   momentum: MomentumContract,
   bluefinx: BluefinXContract,
+  RFQ: BluefinXV2Contract,
   sevenk_v1: SevenKV1,
   fullsail: FullsailContract,
   cetus_dlmm: CetusDLMMContract,
