@@ -28,11 +28,13 @@ export class BluefinXV2Contract extends BaseContract {
 
     // Serialize QuoteV2 (without taker field)
     // Field order MUST match Move struct!
+    // IMPORTANT: Use the original quote amounts (extra.tokenInAmount/tokenOutAmount)
+    // NOT the swap amounts. The signature was created for the original quote amounts.
     const quoteBytes = BcsQuoteV2.serialize({
       vault: extra.vault,
       id: extra.quoteId,
-      token_in_amount: this.swapInfo.amount,
-      token_out_amount: this.swapInfo.returnAmount,  // Before token types
+      token_in_amount: extra.tokenInAmount,
+      token_out_amount: extra.tokenOutAmount,
       token_in_type: normalizeStructTag(this.swapInfo.assetIn).slice(2),
       token_out_type: normalizeStructTag(this.swapInfo.assetOut).slice(2),
       expires_at: extra.quoteExpiresAtUtcMillis,
