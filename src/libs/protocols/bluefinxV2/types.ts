@@ -6,8 +6,6 @@ export type BluefinXV2Extra = {
   tokenInAmount: string;
   /** Original quote token_out_amount (used for signature verification) */
   tokenOutAmount: string;
-  /** Actual swap amount from SOR (for partial quote execution) */
-  swapAmount?: string;
   quoteExpiresAtUtcMillis: number;
   createdAtUtcMillis: number;
   // V2 specific: No taker field since anyone can execute

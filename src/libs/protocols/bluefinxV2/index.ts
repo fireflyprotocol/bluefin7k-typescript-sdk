@@ -48,10 +48,9 @@ export class BluefinXV2Contract extends BaseContract {
       this.inputCoinObject
     );
 
-    // For intermediate hops (amount == 0), we need to dynamically get the balance value
-    // because the actual balance from previous hops might differ slightly from the API's calculation.
-    // The vault requires deposit_balance == swap_amount, so we must use the actual balance value.
-    const isIntermediateHop = this.swapInfo.amount === "0" || BigInt(this.swapInfo.amount) === 0n;
+    // For intermediate hops (amount == "0"), we need to dynamically get the balance value
+    // because the actual balance from previous hops may differ from the API's estimate.
+    const isIntermediateHop = this.swapInfo.amount === "0";
 
     // Get the actual balance value using a Move call - this ensures swap_amount matches exactly
     const [balanceValue] = tx.moveCall({
@@ -60,11 +59,11 @@ export class BluefinXV2Contract extends BaseContract {
       arguments: [inputBalance],
     });
 
-    // For intermediate hops, use the actual balance value
-    // For first hops, we can use the API's swapAmount (which should match the input)
+    // For intermediate hops, use the actual balance value (since amount is "0")
+    // For first hops, use the amount from swapInfo
     const swapAmountArg = isIntermediateHop
       ? balanceValue
-      : tx.pure.u64(extra.swapAmount ? BigInt(extra.swapAmount) : BigInt(this.swapInfo.amount));
+      : tx.pure.u64(BigInt(this.swapInfo.amount));
 
     // Check if swap via partner is enabled
     if (this.config.swapViaPartner) {
