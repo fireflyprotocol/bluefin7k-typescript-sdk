@@ -48,6 +48,24 @@ export class BluefinXV2Contract extends BaseContract {
       this.inputCoinObject
     );
 
+    // For intermediate hops (amount == 0), we need to dynamically get the balance value
+    // because the actual balance from previous hops might differ slightly from the API's calculation.
+    // The vault requires deposit_balance == swap_amount, so we must use the actual balance value.
+    const isIntermediateHop = this.swapInfo.amount === "0" || BigInt(this.swapInfo.amount) === 0n;
+
+    // Get the actual balance value using a Move call - this ensures swap_amount matches exactly
+    const [balanceValue] = tx.moveCall({
+      target: "0x2::balance::value",
+      typeArguments: [this.swapInfo.assetIn],
+      arguments: [inputBalance],
+    });
+
+    // For intermediate hops, use the actual balance value
+    // For first hops, we can use the API's swapAmount (which should match the input)
+    const swapAmountArg = isIntermediateHop
+      ? balanceValue
+      : tx.pure.u64(extra.swapAmount ? BigInt(extra.swapAmount) : BigInt(this.swapInfo.amount));
+
     // Check if swap via partner is enabled
     if (this.config.swapViaPartner) {
       // Call vault::swap_via_partner_v2
@@ -59,7 +77,7 @@ export class BluefinXV2Contract extends BaseContract {
           tx.pure.vector("u8", Array.from(quoteBytes)),
           tx.pure.vector("u8", Array.from(fromBase64(extra.signature))),
           inputBalance,
-          tx.pure.u64(this.swapInfo.amount), // swap_amount parameter for partial fills
+          swapAmountArg, // swap_amount - dynamically computed for intermediate hops
           tx.pure.address(this.config.swapViaPartner.partnerAddress),
           tx.pure.u64(this.config.swapViaPartner.feePercentage1e6),
         ],
@@ -83,7 +101,7 @@ export class BluefinXV2Contract extends BaseContract {
           tx.pure.vector("u8", Array.from(quoteBytes)),
           tx.pure.vector("u8", Array.from(fromBase64(extra.signature))),
           inputBalance,
-          tx.pure.u64(this.swapInfo.amount), // swap_amount parameter for partial fills
+          swapAmountArg, // swap_amount - dynamically computed for intermediate hops
         ],
         target: `${this.config.bluefinx.package}::vault::swap_v2`,
         typeArguments: [this.swapInfo.assetIn, this.swapInfo.assetOut],
