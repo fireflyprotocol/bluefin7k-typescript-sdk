@@ -106,7 +106,7 @@ export async function getQuote(
   }
 
   const path =
-    Config.getEndpointProvider() === "Bluefin7k" ? `v3/quote` : `v2/quote`;
+    Config.getEndpointProvider() === "Bluefin7kV2" ? `v3/quote` : `v2/quote`;
 
   if (path === "v3/quote") {
     const requestId = uuidv4();
