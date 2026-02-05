@@ -86,6 +86,23 @@ console.log("Sui client", Config.getSuiClient());
 
 Note: this package only supports **mainnet**.
 
+### Set Endpoint Provider (API Version)
+
+You can toggle between different API versions:
+
+- `"Bluefin7k"` (default) - Uses `v2/quote` endpoint
+- `"Bluefin7kV2"` - Uses `v3/quote` endpoint with RFQ support
+
+```typescript
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+
+// Use v2 API (default)
+Config.setEndpointProvider("Bluefin7k");
+
+// Use v3 API with RFQ support
+Config.setEndpointProvider("Bluefin7kV2");
+```
+
 ## Swap
 
 See [Swap](docs/SWAP.md).
