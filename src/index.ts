@@ -1,6 +1,7 @@
 export * from "./types/aggregator";
 
 import { Config } from "./config/index";
+import type { EndpointProvider } from "./config/index";
 
 import {
   getSuiPrice,
@@ -34,6 +35,8 @@ import {
 // avoid breaking changes
 const getSuiClient = Config.getSuiClient;
 const setSuiClient = Config.setSuiClient;
+
+export type { EndpointProvider };
 
 export {
   // config

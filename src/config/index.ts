@@ -4,7 +4,7 @@ import {
   SuiPythClient,
 } from "@pythnetwork/pyth-sui-js";
 
-type EndpointProvider = "7k" | "Bluefin7k";
+type EndpointProvider = "Bluefin7k" | "Bluefin7kV2";
 
 const HERMES_API = "https://hermes.pyth.network";
 const WORMHOLE_STATE_ID =
@@ -102,3 +102,4 @@ const Config = {
 };
 
 export { Config };
+export type { EndpointProvider };
