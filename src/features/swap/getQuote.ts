@@ -108,18 +108,16 @@ export async function getQuote(
   const path =
     Config.getEndpointProvider() === "Bluefin7kV2" ? `v3/quote` : `v2/quote`;
 
-  if (path === "v3/quote") {
-    const requestId = uuidv4();
-    const headers = {
-      "x-request-id": requestId,
-      ...requestInit?.headers,
-    };
+  const requestId = uuidv4();
+  const headers = {
+    "x-request-id": requestId,
+    ...requestInit?.headers,
+  };
 
-    requestInit = {
-      ...requestInit,
-      headers,
-    };
-  }
+  requestInit = {
+    ...requestInit,
+    headers,
+  };
 
   const response = await fetchClient(
     `${getMainEndpointUrl()}/${path}?${params}`,
