@@ -55,6 +55,7 @@ export const DEFAULT_SOURCES: SourceDex[] = [
   "cetus_dlmm",
   "ferra_dlmm",
   "ferra_clmm",
+  "RFQ"
 ];
 
 export const ORACLE_BASED_SOURCES = new Set<SourceDex>([
