@@ -26,7 +26,7 @@ let pythClient: SuiPythClient = new SuiPythClient(
 let pythConnection: SuiPriceServiceConnection = new SuiPriceServiceConnection(
   HERMES_API,
 );
-let endpointProvider: EndpointProvider = "Bluefin7k";
+let endpointProvider: EndpointProvider = "Bluefin7kV2";
 
 function setApiKey(key: string): void {
   apiKey = key;
