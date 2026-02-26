@@ -25,6 +25,10 @@ import { denormalizeTokenType } from "../../utils/token";
 import { getConfig } from "./config";
 import { ORACLE_BASED_SOURCES } from "./getQuote";
 
+// 0.5 SUI in MIST — generous budget for complex multi-hop aggregator swap routes.
+// Sui only charges actual gas consumed; a higher budget prevents "insufficient gas" failures.
+const AGGREGATOR_SWAP_GAS_BUDGET = 500_000_000;
+
 export const buildTx = async ({
   quoteResponse,
   accountAddress,
@@ -174,6 +178,7 @@ export const buildTx = async ({
       coinOut,
     };
   }
+  tx.setGasBudget(AGGREGATOR_SWAP_GAS_BUDGET);
   return { tx, coinOut };
 };
 
