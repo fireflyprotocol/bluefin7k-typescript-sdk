@@ -25,9 +25,14 @@ import { denormalizeTokenType } from "../../utils/token";
 import { getConfig } from "./config";
 import { ORACLE_BASED_SOURCES } from "./getQuote";
 
-// 0.5 SUI in MIST — generous budget for complex multi-hop aggregator swap routes.
-// Sui only charges actual gas consumed; a higher budget prevents "insufficient gas" failures.
-const AGGREGATOR_SWAP_GAS_BUDGET = 500_000_000;
+// --- Dynamic gas budget constants ---
+// The SDK dry run underestimates for complex aggregator PTBs (150+ commands)
+// because on-chain state (STEAMM banks, dynamic fields) can shift between
+// dry run and execution. We do our own dry run and apply a generous multiplier.
+// Sui only charges actual gas consumed — the budget is just a ceiling/hold.
+const GAS_BUDGET_SAFETY_MULTIPLIER = 2n;
+const MIN_GAS_BUDGET = 50_000_000n; // 0.05 SUI floor
+const MAX_GAS_BUDGET = 500_000_000n; // 0.5 SUI ceiling
 
 export const buildTx = async ({
   quoteResponse,
@@ -178,8 +183,69 @@ export const buildTx = async ({
       coinOut,
     };
   }
-  tx.setGasBudget(AGGREGATOR_SWAP_GAS_BUDGET);
+
+  await estimateAndSetGasBudget(tx, accountAddress);
   return { tx, coinOut };
+};
+
+// ---------------------------------------------------------------------------
+// Dynamic gas estimation via dry run + safety multiplier
+// ---------------------------------------------------------------------------
+// Why not just remove setGasBudget and let the SDK auto-estimate?
+// Because the SDK's dry run was returning ~0.07 SUI for complex aggregator
+// routes that actually needed more at execution time (confirmed by Fordefi).
+// We do our own dry run and apply a 3x multiplier to cover state drift
+// between simulation and execution (STEAMM bToken burns, dynamic fields, etc).
+// Sui only charges actual gas consumed, so a higher budget costs nothing extra.
+// ---------------------------------------------------------------------------
+const estimateAndSetGasBudget = async (
+  tx: Transaction,
+  accountAddress: string,
+): Promise<void> => {
+  const client = Config.getSuiClient();
+
+  try {
+    tx.setSenderIfNotSet(accountAddress);
+    const txBytes = await tx.build({ client });
+
+    const dryRun = await client.dryRunTransactionBlock({
+      transactionBlock: txBytes,
+    });
+
+    if (dryRun.effects.status.status === "success") {
+      const { computationCost, storageCost, storageRebate } =
+        dryRun.effects.gasUsed;
+
+      const netGas =
+        BigInt(computationCost) +
+        BigInt(storageCost) -
+        BigInt(storageRebate);
+
+      let maxGasBudget = MAX_GAS_BUDGET;
+      if (netGas > MAX_GAS_BUDGET) {
+        maxGasBudget = netGas;
+      }
+
+      let budget = netGas * GAS_BUDGET_SAFETY_MULTIPLIER;
+      if (budget < MIN_GAS_BUDGET) budget = MIN_GAS_BUDGET;
+      if (budget > maxGasBudget) budget = maxGasBudget;
+
+      console.log(
+        `[gas] dry run: ${netGas} MIST (${Number(netGas) / 1e9} SUI)` +
+          ` → budget: ${budget} MIST (${Number(budget) / 1e9} SUI)`,
+      );
+
+      tx.setGasBudget(budget);
+      return;
+    }
+
+    console.warn("[gas] dry run reverted:", dryRun.effects.status.error);
+  } catch (err) {
+    console.warn("[gas] estimation failed:", err);
+  }
+
+  // Fallback: use max budget if dry run fails or reverts
+  // tx.setGasBudget(MAX_GAS_BUDGET);
 };
 
 const getPythPriceFeeds = (res: QuoteResponse) => {
