@@ -31,7 +31,6 @@ import { ORACLE_BASED_SOURCES } from "./getQuote";
 // dry run and execution. We do our own dry run and apply a generous multiplier.
 // Sui only charges actual gas consumed — the budget is just a ceiling/hold.
 const GAS_BUDGET_SAFETY_MULTIPLIER = 2n;
-const MIN_GAS_BUDGET = 50_000_000n; // 0.05 SUI floor
 const MAX_GAS_BUDGET = 500_000_000n; // 0.5 SUI ceiling
 
 export const buildTx = async ({
@@ -227,7 +226,6 @@ const estimateAndSetGasBudget = async (
       }
 
       let budget = netGas * GAS_BUDGET_SAFETY_MULTIPLIER;
-      if (budget < MIN_GAS_BUDGET) budget = MIN_GAS_BUDGET;
       if (budget > maxGasBudget) budget = maxGasBudget;
 
       console.log(
