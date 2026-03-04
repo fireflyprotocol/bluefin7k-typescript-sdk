@@ -193,7 +193,7 @@ export const buildTx = async ({
 // Why not just remove setGasBudget and let the SDK auto-estimate?
 // Because the SDK's dry run was returning ~0.07 SUI for complex aggregator
 // routes that actually needed more at execution time (confirmed by Fordefi).
-// We do our own dry run and apply a 3x multiplier to cover state drift
+// We do our own dry run and apply a 2x multiplier to cover state drift
 // between simulation and execution (STEAMM bToken burns, dynamic fields, etc).
 // Sui only charges actual gas consumed, so a higher budget costs nothing extra.
 // ---------------------------------------------------------------------------
