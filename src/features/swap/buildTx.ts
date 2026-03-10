@@ -32,7 +32,7 @@ import { ORACLE_BASED_SOURCES } from "./getQuote";
 // Sui only charges actual gas consumed — the budget is just a ceiling/hold.
 const GAS_BUDGET_SAFETY_MULTIPLIER = 2n;
 const MAX_GAS_BUDGET = 500_000_000n; // 0.5 SUI ceiling
-const MIN_GAS_BUDGET = 1_000n;
+const MIN_GAS_BUDGET = 1_000_000n;
 
 export const buildTx = async ({
   quoteResponse,
