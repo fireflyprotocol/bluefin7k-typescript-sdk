@@ -32,6 +32,7 @@ import { ORACLE_BASED_SOURCES } from "./getQuote";
 // Sui only charges actual gas consumed — the budget is just a ceiling/hold.
 const GAS_BUDGET_SAFETY_MULTIPLIER = 2n;
 const MAX_GAS_BUDGET = 500_000_000n; // 0.5 SUI ceiling
+const MIN_GAS_BUDGET = 1_000n;
 
 export const buildTx = async ({
   quoteResponse,
@@ -215,21 +216,21 @@ const estimateAndSetGasBudget = async (
       const { computationCost, storageCost, storageRebate } =
         dryRun.effects.gasUsed;
 
-      const netGas =
-        BigInt(computationCost) +
-        BigInt(storageCost) -
-        BigInt(storageRebate);
+      const chargeableGas = BigInt(computationCost) + BigInt(storageCost);
+      const netGas = chargeableGas - BigInt(storageRebate);
 
       let maxGasBudget = MAX_GAS_BUDGET;
-      if (netGas > MAX_GAS_BUDGET) {
-        maxGasBudget = netGas;
+      if (chargeableGas > MAX_GAS_BUDGET) {
+        maxGasBudget = chargeableGas;
       }
 
-      let budget = netGas * GAS_BUDGET_SAFETY_MULTIPLIER;
+      let budget = chargeableGas * GAS_BUDGET_SAFETY_MULTIPLIER;
       if (budget > maxGasBudget) budget = maxGasBudget;
+      if (budget < MIN_GAS_BUDGET) budget = MIN_GAS_BUDGET;
 
       console.log(
-        `[gas] dry run: ${netGas} MIST (${Number(netGas) / 1e9} SUI)` +
+        `[gas] dry run chargeable: ${chargeableGas} MIST (${Number(chargeableGas) / 1e9} SUI)` +
+          `, net: ${netGas} MIST (${Number(netGas) / 1e9} SUI)` +
           ` → budget: ${budget} MIST (${Number(budget) / 1e9} SUI)`,
       );
 
