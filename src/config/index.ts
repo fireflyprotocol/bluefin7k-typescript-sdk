@@ -1,4 +1,5 @@
 import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import {
   SuiPriceServiceConnection,
   SuiPythClient,
@@ -15,13 +16,25 @@ const PYTH_STATE_ID =
 let apiKey: string = "";
 let bluefinXApiKey: string = "";
 let bluefinAggregatorApiKey: string = "";
+
+/** gRPC client — used for all on-chain reads and transaction simulation/execution */
 let suiClient: SuiGrpcClient = new SuiGrpcClient({
   baseUrl: "https://fullnode.mainnet.sui.io:443",
   network: "mainnet",
 });
+
+/**
+ * JSON-RPC client — required by SuiPythClient (@pythnetwork/pyth-sui-js).
+ * The Pyth SDK has not yet migrated to the new gRPC client, so a separate
+ * JSON-RPC client is maintained exclusively for Pyth price feed operations.
+ */
+let jsonRpcClient: SuiJsonRpcClient = new SuiJsonRpcClient({
+  url: getJsonRpcFullnodeUrl("mainnet"),
+  network: "mainnet",
+});
+
 let pythClient: SuiPythClient = new SuiPythClient(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  suiClient as any,
+  jsonRpcClient,
   PYTH_STATE_ID,
   WORMHOLE_STATE_ID,
 );
@@ -62,6 +75,14 @@ function setSuiClient(client: SuiGrpcClient): void {
   suiClient = client;
 }
 
+function getJsonRpcClient(): SuiJsonRpcClient {
+  return jsonRpcClient;
+}
+
+function setJsonRpcClient(client: SuiJsonRpcClient): void {
+  jsonRpcClient = client;
+}
+
 function setPythClient(client: SuiPythClient): void {
   pythClient = client;
 }
@@ -95,6 +116,8 @@ const Config = {
   getBluefinAggregatorApiKey,
   setSuiClient,
   getSuiClient,
+  setJsonRpcClient,
+  getJsonRpcClient,
   setPythClient,
   getPythClient,
   setPythConnection,
