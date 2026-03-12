@@ -20,6 +20,7 @@ let suiClient: SuiGrpcClient = new SuiGrpcClient({
   network: "mainnet",
 });
 let pythClient: SuiPythClient = new SuiPythClient(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   suiClient as any,
   PYTH_STATE_ID,
   WORMHOLE_STATE_ID,

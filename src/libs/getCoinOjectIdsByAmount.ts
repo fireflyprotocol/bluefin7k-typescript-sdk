@@ -13,8 +13,8 @@ const orderByKey = <T extends object>(
   do {
     swapped = false;
     for (let i = 0; i < array.length - 1; i++) {
-      const a = BigInt((array[i] as any)[key]);
-      const b = BigInt((array[i + 1] as any)[key]);
+      const a = BigInt((array[i] as Record<string, unknown>)[key] as string);
+      const b = BigInt((array[i + 1] as Record<string, unknown>)[key] as string);
       if (sortBy === "desc" ? a < b : a > b) {
         const temp = array[i];
         array[i] = array[i + 1];

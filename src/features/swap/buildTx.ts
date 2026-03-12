@@ -119,10 +119,10 @@ export const buildTx = async ({
     }),
   );
   if (coinObjects.length > 0) {
-    const mergeCoin: any =
-      coinObjects.length > 1
+    const mergeCoin =
+      (coinObjects.length > 1
         ? SuiUtils.mergeCoins(coinObjects, tx)
-        : coinObjects[0];
+        : coinObjects[0]) as TransactionObjectArgument;
 
     const returnAmountAfterCommission =
       (BigInt(10000 - _commission.commissionBps) *
@@ -253,7 +253,8 @@ const getPythPriceFeeds = (res: QuoteResponse) => {
   for (const s of res.swaps) {
     for (const o of (s.extra?.oracles || []) as ExtraOracle[]) {
       // FIXME: deprecation price_identifier in the next version
-      const bytes = o.Pyth?.bytes || (o.Pyth as any)?.price_identifier?.bytes;
+      type LegacyPyth = { bytes?: number[]; price_identifier?: { bytes: number[] } };
+      const bytes = o.Pyth?.bytes || (o.Pyth as LegacyPyth)?.price_identifier?.bytes;
       if (bytes) {
         ids.add("0x" + toHex(Uint8Array.from(bytes)));
       }
@@ -273,6 +274,7 @@ const updatePythPriceFeedsIfAny = async (
     const prices =
       await Config.getPythConnection().getPriceFeedsUpdateData(pythIds);
     const ids = await Config.getPythClient().updatePriceFeeds(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tx as any,
       prices,
       pythIds,

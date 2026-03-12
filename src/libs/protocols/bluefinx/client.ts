@@ -7,7 +7,7 @@ import {
   SwapResponse,
 } from "./types";
 
-const request = async <T = any>(path: string, body: any) => {
+const request = async <T = unknown>(path: string, body: unknown) => {
   const headers = new Headers({
     "Content-Type": "application/json",
   });
