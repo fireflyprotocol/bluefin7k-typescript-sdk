@@ -1,7 +1,7 @@
 import "mocha";
-import { Config } from "../src";
-import { SUI_TYPE } from "../src/constants/tokens";
-import { testSwap } from "./utils.spec";
+import { Config } from "../src/index.js";
+import { SUI_TYPE } from "../src/constants/tokens.js";
+import { testSwap } from "./utils.spec.js";
 
 const testAccount =
   "0xa851c19ec9a5d661da8d12626b826af105f0bd6654e6dc4213c2a3202be4b413";

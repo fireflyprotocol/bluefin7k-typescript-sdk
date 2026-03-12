@@ -15,7 +15,7 @@ export interface BaseContractParams {
   pythMap: Record<string, string>;
 }
 
-export abstract class BaseContract<T = any> {
+export abstract class BaseContract<T = unknown> {
   protected swapInfo: TxSorSwap;
   protected inputCoinObject: TransactionObjectArgument;
   protected currentAccount: string;
@@ -62,8 +62,9 @@ export abstract class BaseContract<T = any> {
 
   protected getPythPriceInfoId(oracle?: ExtraOracle) {
     // FIXME: deprecation price_identifier in the next version
+    type LegacyPyth = { bytes?: number[]; price_identifier?: { bytes: number[] } };
     const bytes =
-      oracle?.Pyth?.bytes || (oracle?.Pyth as any)?.price_identifier?.bytes;
+      oracle?.Pyth?.bytes || (oracle?.Pyth as LegacyPyth)?.price_identifier?.bytes;
     if (!bytes) {
       throw new Error(`Invalid oracle info for getPythPriceInfoId`);
     }

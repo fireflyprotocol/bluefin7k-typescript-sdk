@@ -21,7 +21,7 @@ export const getSplitCoinForTx = async (
     amount,
     coinType,
   );
-  const coinObjectId: any = objectIds[0];
+  const coinObjectId = objectIds[0];
   if (
     normalizeStructTag(coinType) === normalizeStructTag(SUI_TYPE) &&
     !isSponsored

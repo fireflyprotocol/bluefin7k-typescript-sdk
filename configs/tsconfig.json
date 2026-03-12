@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "moduleResolution": "node",
+    "lib": ["ES2024", "DOM"],
+    "target": "ES2024",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "../lib/esm",
+    "declarationDir": "../lib/esm/types",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -10,7 +14,7 @@
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
   },
   "files": ["../src/index.ts"]
 }

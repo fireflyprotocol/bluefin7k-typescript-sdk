@@ -119,10 +119,11 @@ export const buildTx = async ({
     }),
   );
   if (coinObjects.length > 0) {
-    const mergeCoin: any =
+    const mergeCoin = (
       coinObjects.length > 1
         ? SuiUtils.mergeCoins(coinObjects, tx)
-        : coinObjects[0];
+        : coinObjects[0]
+    ) as TransactionObjectArgument;
 
     const returnAmountAfterCommission =
       (BigInt(10000 - _commission.commissionBps) *
@@ -208,13 +209,15 @@ const estimateAndSetGasBudget = async (
     tx.setSenderIfNotSet(accountAddress);
     const txBytes = await tx.build({ client });
 
-    const dryRun = await client.dryRunTransactionBlock({
-      transactionBlock: txBytes,
+    const dryRun = await client.core.simulateTransaction({
+      transaction: txBytes,
+      include: { effects: true },
     });
 
-    if (dryRun.effects.status.status === "success") {
+    const txResult = dryRun.Transaction ?? dryRun.FailedTransaction;
+    if (dryRun.$kind === "Transaction" && txResult?.effects?.status.success) {
       const { computationCost, storageCost, storageRebate } =
-        dryRun.effects.gasUsed;
+        txResult.effects.gasUsed;
 
       const netGas =
         BigInt(computationCost) + BigInt(storageCost) - BigInt(storageRebate);
@@ -237,7 +240,7 @@ const estimateAndSetGasBudget = async (
       return;
     }
 
-    console.warn("[gas] dry run reverted:", dryRun.effects.status.error);
+    console.warn("[gas] dry run reverted:", txResult?.effects?.status.error);
   } catch (err) {
     console.warn("[gas] estimation failed:", err);
   }
@@ -251,7 +254,12 @@ const getPythPriceFeeds = (res: QuoteResponse) => {
   for (const s of res.swaps) {
     for (const o of (s.extra?.oracles || []) as ExtraOracle[]) {
       // FIXME: deprecation price_identifier in the next version
-      const bytes = o.Pyth?.bytes || (o.Pyth as any)?.price_identifier?.bytes;
+      type LegacyPyth = {
+        bytes?: number[];
+        price_identifier?: { bytes: number[] };
+      };
+      const bytes =
+        o.Pyth?.bytes || (o.Pyth as LegacyPyth)?.price_identifier?.bytes;
       if (bytes) {
         ids.add("0x" + toHex(Uint8Array.from(bytes)));
       }
@@ -271,6 +279,7 @@ const updatePythPriceFeedsIfAny = async (
     const prices =
       await Config.getPythConnection().getPriceFeedsUpdateData(pythIds);
     const ids = await Config.getPythClient().updatePriceFeeds(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tx as any,
       prices,
       pythIds,

@@ -1,12 +1,12 @@
 import "mocha";
 
-import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { expect } from "chai";
-import { SUI_TYPE } from "../src/constants/tokens";
-import { ORACLE_BASED_SOURCES } from "../src/features/swap";
-import { buildTx, Config, getQuote } from "../src/index";
-import { testSwap } from "./utils.spec";
+import { SUI_TYPE } from "../src/constants/tokens.js";
+import { ORACLE_BASED_SOURCES } from "../src/features/swap/index.js";
+import { buildTx, Config, getQuote } from "../src/index.js";
+import { testSwap } from "./utils.spec.js";
 
 const testAccount =
   "0x935029ca5219502a47ac9b69f556ccf6e2198b5e7815cf50f68846f723739cbd";
@@ -23,7 +23,7 @@ const tokenYAlt =
 const amountX = "1000000000"; // 1 SUI
 const amountY = "10000000"; // 10 USDC
 
-const client = new SuiClient({ url: getFullnodeUrl("mainnet") });
+const client = new SuiGrpcClient({ baseUrl: "https://fullnode.mainnet.sui.io:443", network: "mainnet" });
 Config.setSuiClient(client);
 Config.setApiKey(process.env.API_KEY || "");
 describe("Cetus test", () => {

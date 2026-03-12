@@ -44,6 +44,7 @@ export type SorSwap = {
   assetOut: string;
   functionName: string;
   arguments: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extra?: any;
 };
 

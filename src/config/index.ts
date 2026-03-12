@@ -1,4 +1,6 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import type { ClientWithCoreApi } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import {
   SuiPriceServiceConnection,
   SuiPythClient,
@@ -15,11 +17,29 @@ const PYTH_STATE_ID =
 let apiKey: string = "";
 let bluefinXApiKey: string = "";
 let bluefinAggregatorApiKey: string = "";
-let suiClient: SuiClient = new SuiClient({
-  url: getFullnodeUrl("mainnet"),
+
+/**
+ * Primary Sui client (supports JSON-RPC, GraphQL, or gRPC).
+ * Default is gRPC for better performance and full feature support.
+ * Can be swapped to any ClientWithCoreApi implementation via setSuiClient().
+ */
+let suiClient: ClientWithCoreApi = new SuiGrpcClient({
+  baseUrl: "https://fullnode.mainnet.sui.io:443",
+  network: "mainnet",
 });
+
+/**
+ * JSON-RPC client — required by SuiPythClient (@pythnetwork/pyth-sui-js).
+ * The Pyth SDK has not yet migrated to the new gRPC client, so a separate
+ * JSON-RPC client is maintained exclusively for Pyth price feed operations.
+ */
+let jsonRpcClient: SuiJsonRpcClient = new SuiJsonRpcClient({
+  url: getJsonRpcFullnodeUrl("mainnet"),
+  network: "mainnet",
+});
+
 let pythClient: SuiPythClient = new SuiPythClient(
-  suiClient as any,
+  jsonRpcClient,
   PYTH_STATE_ID,
   WORMHOLE_STATE_ID,
 );
@@ -52,12 +72,20 @@ function getBluefinAggregatorApiKey(): string {
   return bluefinAggregatorApiKey;
 }
 
-function getSuiClient(): SuiClient {
+function getSuiClient(): ClientWithCoreApi {
   return suiClient;
 }
 
-function setSuiClient(client: SuiClient): void {
+function setSuiClient(client: ClientWithCoreApi): void {
   suiClient = client;
+}
+
+function getJsonRpcClient(): SuiJsonRpcClient {
+  return jsonRpcClient;
+}
+
+function setJsonRpcClient(client: SuiJsonRpcClient): void {
+  jsonRpcClient = client;
 }
 
 function setPythClient(client: SuiPythClient): void {
@@ -93,6 +121,8 @@ const Config = {
   getBluefinAggregatorApiKey,
   setSuiClient,
   getSuiClient,
+  setJsonRpcClient,
+  getJsonRpcClient,
   setPythClient,
   getPythClient,
   setPythConnection,
