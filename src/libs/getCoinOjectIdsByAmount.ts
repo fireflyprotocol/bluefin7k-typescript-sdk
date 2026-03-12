@@ -40,7 +40,7 @@ export const getCoinOjectIdsByAmount = async (
   let nextCursor: string | null | undefined = undefined;
   while (hasNextPage) {
     try {
-      const coins = await Config.getSuiClient().listCoins({
+      const coins = await Config.getSuiClient().core.listCoins({
         owner: address,
         coinType,
         cursor: nextCursor,

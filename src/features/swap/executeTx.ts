@@ -37,7 +37,7 @@ export const executeTx = async (
   if (isBluefinTx) {
     try {
       const result = await executeBluefinTx(tx, signature);
-      res = await client.waitForTransaction({
+      res = await client.core.waitForTransaction({
         digest: result.txDigest,
         include,
       });
@@ -47,7 +47,7 @@ export const executeTx = async (
       );
     }
   } else {
-    res = await client.executeTransaction({
+    res = await client.core.executeTransaction({
       transaction: fromBase64(signedTxBytes),
       signatures: [signature],
       include,

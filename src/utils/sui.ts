@@ -51,7 +51,7 @@ export const SuiUtils = {
 
     do {
       try {
-        const res = await Config.getSuiClient().listCoins({
+        const res = await Config.getSuiClient().core.listCoins({
           owner: address,
           coinType: type,
           cursor: cursor,

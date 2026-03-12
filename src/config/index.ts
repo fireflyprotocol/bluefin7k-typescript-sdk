@@ -1,3 +1,4 @@
+import type { ClientWithCoreApi } from "@mysten/sui/client";
 import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import {
@@ -18,8 +19,12 @@ let apiKey: string = "";
 let bluefinXApiKey: string = "";
 let bluefinAggregatorApiKey: string = "";
 
-/** gRPC client — used for all on-chain reads and transaction simulation/execution */
-let suiClient: SuiGrpcClient = new SuiGrpcClient({
+/**
+ * Primary Sui client (supports JSON-RPC, GraphQL, or gRPC).
+ * Default is gRPC for better performance and full feature support.
+ * Can be swapped to any ClientWithCoreApi implementation via setSuiClient().
+ */
+let suiClient: ClientWithCoreApi = new SuiGrpcClient({
   baseUrl: "https://fullnode.mainnet.sui.io:443",
   network: "mainnet",
 });
@@ -68,11 +73,11 @@ function getBluefinAggregatorApiKey(): string {
   return bluefinAggregatorApiKey;
 }
 
-function getSuiClient(): SuiGrpcClient {
+function getSuiClient(): ClientWithCoreApi {
   return suiClient;
 }
 
-function setSuiClient(client: SuiGrpcClient): void {
+function setSuiClient(client: ClientWithCoreApi): void {
   suiClient = client;
 }
 
