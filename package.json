@@ -62,7 +62,10 @@
   },
   "peerDependencies": {
     "@mysten/sui": "^2.0.0",
-    "@pythnetwork/pyth-sui-js": "^2.1.0"
+    "@pythnetwork/pyth-sui-js": "^3.0.0"
+  },
+  "overrides": {
+    "@mysten/sui": "^2.0.0"
   },
   "ts-node": {
     "esm": true,
