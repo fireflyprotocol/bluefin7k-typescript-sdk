@@ -2,9 +2,9 @@
   "compilerOptions": {
     "lib": ["ES2024", "DOM"],
     "target": "ES2024",
-   "module": "ESNext",
-   "moduleResolution": "bundler",
-   "outDir": "../lib/esm",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "../lib/esm",
     "declarationDir": "../lib/esm/types",
     "strict": true,
     "esModuleInterop": true,

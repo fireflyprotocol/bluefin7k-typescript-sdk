@@ -1,8 +1,8 @@
 import "mocha";
 import { assert } from "chai";
 
-import npmPackage from "../src/index";
-import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
+import npmPackage from "../src/index.js";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 
 describe("NPM Package", () => {
   it("should be an object", () => {
@@ -31,8 +31,8 @@ describe("NPM Package", () => {
 
   // sui client
   it("should be able to set and get sui client", () => {
-    const suiClient = new SuiJsonRpcClient({
-      url: getJsonRpcFullnodeUrl("mainnet"),
+    const suiClient = new SuiGrpcClient({
+      baseUrl: "https://fullnode.mainnet.sui.io:443",
       network: "mainnet",
     });
     npmPackage.Config.setSuiClient(suiClient);
