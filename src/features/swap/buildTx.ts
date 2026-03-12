@@ -208,13 +208,15 @@ const estimateAndSetGasBudget = async (
     tx.setSenderIfNotSet(accountAddress);
     const txBytes = await tx.build({ client });
 
-    const dryRun = await client.dryRunTransactionBlock({
-      transactionBlock: txBytes,
+    const dryRun = await client.simulateTransaction({
+      transaction: txBytes,
+      include: { effects: true },
     });
 
-    if (dryRun.effects.status.status === "success") {
+    const txResult = dryRun.Transaction ?? dryRun.FailedTransaction;
+    if (dryRun.$kind === "Transaction" && txResult?.effects?.status.success) {
       const { computationCost, storageCost, storageRebate } =
-        dryRun.effects.gasUsed;
+        txResult.effects.gasUsed;
 
       const netGas =
         BigInt(computationCost) + BigInt(storageCost) - BigInt(storageRebate);
@@ -237,7 +239,7 @@ const estimateAndSetGasBudget = async (
       return;
     }
 
-    console.warn("[gas] dry run reverted:", dryRun.effects.status.error);
+    console.warn("[gas] dry run reverted:", txResult?.effects?.status.error);
   } catch (err) {
     console.warn("[gas] estimation failed:", err);
   }
