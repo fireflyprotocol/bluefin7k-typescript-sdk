@@ -26,7 +26,7 @@
     "build": "npm run clean && npm run build:esm",
     "build:esm": "tsc -p ./configs/tsconfig.json && tsc-alias -p ./configs/tsconfig.json -f && mv lib/esm/index.js lib/esm/index.mjs",
     "prepack": "npm run build",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' mocha --timeout 60000",
+    "test": "NODE_OPTIONS='--import tsx' mocha --timeout 60000",
     "publish:patch": "npm version patch --no-git-tag-version && npm publish --access public",
     "publish:minor": "npm version minor --no-git-tag-version && npm publish --access public",
     "publish:major": "npm version major --no-git-tag-version && npm publish --access public",
@@ -57,19 +57,20 @@
     "mocha": "^11.6.0",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
+    "tsx": "^4.21.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.1"
   },
   "peerDependencies": {
     "@mysten/sui": "^2.0.0",
-    "@pythnetwork/pyth-sui-js": "^3.0.0"
+    "@pythnetwork/pyth-sui-js": "^2.1.0"
   },
   "overrides": {
     "@mysten/sui": "^2.0.0"
   },
   "ts-node": {
     "esm": true,
-    "project": "./configs/tsconfig.json"
+    "project": "./configs/tsconfig.test.json"
   },
   "dependencies": {
     "uuid": "^13.0.0"

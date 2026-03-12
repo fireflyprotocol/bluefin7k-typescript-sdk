@@ -1,9 +1,9 @@
 import "mocha";
 
-import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
-import { SUI_TYPE } from "../src/constants/tokens";
-import { setSuiClient } from "../src/index";
-import { testSwap } from "./utils.spec";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { SUI_TYPE } from "../src/constants/tokens.js";
+import { setSuiClient } from "../src/index.js";
+import { testSwap } from "./utils.spec.js";
 
 describe("SpringSui test", () => {
   const testAccount =
@@ -13,7 +13,7 @@ describe("SpringSui test", () => {
     "0x83556891f4a0f233ce7b05cfe7f957d4020492a34f5405b2cb9377d060bef4bf::spring_sui::SPRING_SUI";
   const amountX = "100000000"; // 0.1 SUI
   const amountY = "100000000"; // 0.1 sSUI
-  const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("mainnet"), network: "mainnet" });
+  const client = new SuiGrpcClient({ baseUrl: "https://fullnode.mainnet.sui.io:443", network: "mainnet" });
   setSuiClient(client);
   it("should routing success for springsui sources x for y", async () => {
     await testSwap(client, testAccount, {
