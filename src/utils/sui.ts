@@ -1,8 +1,4 @@
-import {
-  CoinStruct,
-  PaginatedObjectsResponse,
-  SuiObjectResponseQuery,
-} from "@mysten/sui/jsonRpc";
+import type { SuiClientTypes } from "@mysten/sui/client";
 import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
 import { parseStructTag } from "@mysten/sui/utils";
 import { Config } from "../config/index";
@@ -114,7 +110,7 @@ export const SuiUtils = {
         txb.splitCoins(txb.gas, [totalBalance]);
       }
 
-      const coinObjectsIds = coins.map((coin) => coin.coinObjectId);
+      const coinObjectsIds = coins.map((coin) => coin.objectId);
 
       if (coins.length > 1) {
         txb.mergeCoins(
@@ -130,7 +126,7 @@ export const SuiUtils = {
   },
 
   mergeAllCoinsWithoutFetch(
-    coins: CoinStruct[],
+    coins: SuiClientTypes.Coin[],
     coinType: string,
     txb: Transaction,
   ) {
@@ -144,7 +140,7 @@ export const SuiUtils = {
       txb.splitCoins(txb.gas, [totalBalance]);
     }
 
-    const coinObjectsIds = coins.map((coin) => coin.coinObjectId);
+    const coinObjectsIds = coins.map((coin) => coin.objectId);
 
     if (coins.length > 1) {
       txb.mergeCoins(
@@ -157,19 +153,19 @@ export const SuiUtils = {
   async getAllUserCoins({ address, type }: { type: string; address: string }) {
     let cursor: string | null | undefined = undefined;
 
-    let coins: CoinStruct[] = [];
+    let coins: SuiClientTypes.Coin[] = [];
     let iter = 0;
 
     do {
       try {
-        const res = await Config.getSuiClient().getCoins({
+        const res = await Config.getSuiClient().listCoins({
           owner: address,
           coinType: type,
           cursor: cursor,
           limit: 50,
         });
-        coins = coins.concat(res.data);
-        cursor = res.nextCursor;
+        coins = coins.concat(res.objects);
+        cursor = res.cursor;
         if (!res.hasNextPage || iter === 8) {
           cursor = null;
         }
@@ -215,7 +211,7 @@ export const SuiUtils = {
 
   async getOwnedObjectsByPage(
     owner: string,
-    query: SuiObjectResponseQuery,
+    query: { type?: string; include?: SuiClientTypes.ObjectInclude },
     paginationArgs: PaginationArgs = "all",
   ): Promise<DataPage<any>> {
     let result: any = [];
@@ -223,17 +219,16 @@ export const SuiUtils = {
     const queryAll = paginationArgs === "all";
     let nextCursor = queryAll ? null : paginationArgs.cursor;
     do {
-      const res: PaginatedObjectsResponse =
-        await Config.getSuiClient().getOwnedObjects({
-          owner,
-          ...query,
-          cursor: nextCursor,
-          limit: queryAll ? null : paginationArgs.limit,
-        });
-      if (res.data) {
-        result = [...result, ...res.data];
+      const res = await Config.getSuiClient().listOwnedObjects({
+        owner,
+        ...query,
+        cursor: nextCursor,
+        limit: queryAll ? undefined : paginationArgs.limit ?? undefined,
+      });
+      if (res.objects) {
+        result = [...result, ...res.objects];
         hasNextPage = res.hasNextPage;
-        nextCursor = res.nextCursor;
+        nextCursor = res.cursor;
       } else {
         hasNextPage = false;
       }

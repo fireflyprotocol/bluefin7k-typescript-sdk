@@ -38,15 +38,14 @@ export async function estimateGasFee({
   const suiPrice = _suiPrice || (await getSuiPrice());
   const suiDecimals = SUI_DECIMALS;
 
-  const {
-    effects: { gasUsed, status },
-  } = await Config.getSuiClient().devInspectTransactionBlock({
-    sender: accountAddress,
-    transactionBlock: tx,
+  const simResult = await Config.getSuiClient().simulateTransaction({
+    transaction: tx,
+    include: { effects: true },
   });
 
-  if (status.status !== "success") return 0;
+  if (simResult.$kind !== "Transaction" || !simResult.Transaction?.effects?.status.success) return 0;
 
+  const gasUsed = simResult.Transaction.effects.gasUsed;
   const fee =
     BigInt(gasUsed.computationCost) +
     BigInt(gasUsed.storageCost) -
