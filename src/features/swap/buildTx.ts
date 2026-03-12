@@ -119,10 +119,11 @@ export const buildTx = async ({
     }),
   );
   if (coinObjects.length > 0) {
-    const mergeCoin =
-      (coinObjects.length > 1
+    const mergeCoin = (
+      coinObjects.length > 1
         ? SuiUtils.mergeCoins(coinObjects, tx)
-        : coinObjects[0]) as TransactionObjectArgument;
+        : coinObjects[0]
+    ) as TransactionObjectArgument;
 
     const returnAmountAfterCommission =
       (BigInt(10000 - _commission.commissionBps) *
@@ -208,7 +209,7 @@ const estimateAndSetGasBudget = async (
     tx.setSenderIfNotSet(accountAddress);
     const txBytes = await tx.build({ client });
 
-    const dryRun = await client.simulateTransaction({
+    const dryRun = await client.core.simulateTransaction({
       transaction: txBytes,
       include: { effects: true },
     });
@@ -253,8 +254,12 @@ const getPythPriceFeeds = (res: QuoteResponse) => {
   for (const s of res.swaps) {
     for (const o of (s.extra?.oracles || []) as ExtraOracle[]) {
       // FIXME: deprecation price_identifier in the next version
-      type LegacyPyth = { bytes?: number[]; price_identifier?: { bytes: number[] } };
-      const bytes = o.Pyth?.bytes || (o.Pyth as LegacyPyth)?.price_identifier?.bytes;
+      type LegacyPyth = {
+        bytes?: number[];
+        price_identifier?: { bytes: number[] };
+      };
+      const bytes =
+        o.Pyth?.bytes || (o.Pyth as LegacyPyth)?.price_identifier?.bytes;
       if (bytes) {
         ids.add("0x" + toHex(Uint8Array.from(bytes)));
       }

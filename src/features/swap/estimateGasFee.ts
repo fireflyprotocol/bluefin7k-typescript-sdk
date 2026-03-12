@@ -38,7 +38,7 @@ export async function estimateGasFee({
   const suiPrice = _suiPrice || (await getSuiPrice());
   const suiDecimals = SUI_DECIMALS;
 
-  const simResult = await Config.getSuiClient().simulateTransaction({
+  const simResult = await Config.getSuiClient().core.simulateTransaction({
     transaction: tx,
     include: { effects: true },
   });
