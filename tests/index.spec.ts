@@ -2,7 +2,7 @@ import "mocha";
 import { assert } from "chai";
 
 import npmPackage from "../src/index";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 
 describe("NPM Package", () => {
   it("should be an object", () => {
@@ -31,8 +31,9 @@ describe("NPM Package", () => {
 
   // sui client
   it("should be able to set and get sui client", () => {
-    const suiClient = new SuiClient({
-      url: getFullnodeUrl("mainnet"),
+    const suiClient = new SuiJsonRpcClient({
+      url: getJsonRpcFullnodeUrl("mainnet"),
+      network: "mainnet",
     });
     npmPackage.Config.setSuiClient(suiClient);
     assert.equal(npmPackage.Config.getSuiClient(), suiClient);

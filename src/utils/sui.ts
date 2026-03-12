@@ -2,7 +2,7 @@ import {
   CoinStruct,
   PaginatedObjectsResponse,
   SuiObjectResponseQuery,
-} from "@mysten/sui/client";
+} from "@mysten/sui/jsonRpc";
 import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
 import { parseStructTag } from "@mysten/sui/utils";
 import { Config } from "../config/index";

@@ -1,4 +1,4 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import {
   SuiPriceServiceConnection,
   SuiPythClient,
@@ -16,8 +16,9 @@ const PYTH_STATE_ID =
 let apiKey: string = "";
 let bluefinXApiKey: string = "";
 let bluefinAggregatorApiKey: string = "";
-let suiClient: SuiClient = new SuiClient({
-  url: getFullnodeUrl("mainnet"),
+let suiClient: SuiJsonRpcClient = new SuiJsonRpcClient({
+  url: getJsonRpcFullnodeUrl("mainnet"),
+  network: "mainnet",
 });
 let pythClient: SuiPythClient = new SuiPythClient(
   suiClient as any,
@@ -53,11 +54,11 @@ function getBluefinAggregatorApiKey(): string {
   return bluefinAggregatorApiKey;
 }
 
-function getSuiClient(): SuiClient {
+function getSuiClient(): SuiJsonRpcClient {
   return suiClient;
 }
 
-function setSuiClient(client: SuiClient): void {
+function setSuiClient(client: SuiJsonRpcClient): void {
   suiClient = client;
 }
 

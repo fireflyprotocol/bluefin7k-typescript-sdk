@@ -1,6 +1,6 @@
 import "mocha";
 
-import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { expect } from "chai";
 import { SUI_TYPE } from "../src/constants/tokens";
@@ -23,7 +23,7 @@ const tokenYAlt =
 const amountX = "1000000000"; // 1 SUI
 const amountY = "10000000"; // 10 USDC
 
-const client = new SuiClient({ url: getFullnodeUrl("mainnet") });
+const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("mainnet"), network: "mainnet" });
 Config.setSuiClient(client);
 Config.setApiKey(process.env.API_KEY || "");
 describe("Cetus test", () => {

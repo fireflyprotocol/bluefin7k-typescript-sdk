@@ -1,4 +1,4 @@
-import { CoinStruct, PaginatedCoins } from "@mysten/sui/client";
+import { CoinStruct, PaginatedCoins } from "@mysten/sui/jsonRpc";
 import { Config } from "../config/index";
 
 const orderByKey = <T extends object>(

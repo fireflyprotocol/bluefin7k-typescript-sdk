@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiJsonRpcClient } from "@mysten/sui/jsonRpc";
 import { assert } from "chai";
 import { buildTx, getQuote, isBluefinXRouting, SourceDex } from "../src";
 import { BluefinXTx } from "../src/libs/protocols/bluefinx/types";
@@ -17,7 +17,7 @@ interface Params {
   // taker?: string;
 }
 export const testSwap = async (
-  client: SuiClient,
+  client: SuiJsonRpcClient,
   address: string,
   params: Params,
 ) => {

@@ -75,11 +75,11 @@ console.log("BluefinX API key", Config.getBluefinXApiKey());
 ### Set Sui Client
 
 ```typescript
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const network = "mainnet";
-const suiClient = new SuiClient({ url: getFullnodeUrl(network) });
+const suiClient = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl(network), network });
 Config.setSuiClient(suiClient);
 console.log("Sui client", Config.getSuiClient());
 ```
