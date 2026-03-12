@@ -1,7 +1,7 @@
 import {
   SuiTransactionBlockResponse,
   SuiTransactionBlockResponseOptions,
-} from "@mysten/sui/client";
+} from "@mysten/sui/jsonRpc";
 import { Config } from "../../config/index";
 import { executeBluefinTx } from "../../libs/protocols/bluefinx/client";
 import { BluefinXTx } from "../../libs/protocols/bluefinx/types";

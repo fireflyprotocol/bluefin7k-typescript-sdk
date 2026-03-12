@@ -72,7 +72,7 @@
     "typescript-eslint": "^8.34.1"
   },
   "peerDependencies": {
-    "@mysten/sui": "^1.44.0",
+    "@mysten/sui": "^2.0.0",
     "@pythnetwork/pyth-sui-js": "^2.1.0"
   },
   "dependencies": {
