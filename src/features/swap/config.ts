@@ -149,7 +149,7 @@ export const DEFAULT_CONFIG: Config = {
   fullsail: {
     name: "Fullsail",
     package:
-      "0xe1b7d5fd116fea5a8f8e85c13754248d56626a8d0a614b7d916c2348d8323149",
+      "0x497a144ba3d93ae44d9fd23d4ff4761c329d87a505136d2269c743b2297fa881",
     globalConfig:
       "0xe93baa80cb570b3a494cbf0621b2ba96bc993926d34dc92508c9446f9a05d615",
     rewarderGlobalVault:
