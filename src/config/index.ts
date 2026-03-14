@@ -3,6 +3,7 @@ import {
   SuiPriceServiceConnection,
   SuiPythClient,
 } from "@pythnetwork/pyth-sui-js";
+import { API_ENDPOINTS, DEFAULT_BASE_URL } from "../constants/apiEndpoints";
 
 type EndpointProvider = "Bluefin7k" | "Bluefin7kV2";
 
@@ -84,6 +85,30 @@ function getEndpointProvider(): EndpointProvider {
   return endpointProvider;
 }
 
+/**
+ * Override the base URL for all aggregator API calls (quotes, config, etc.).
+ * Use this to point the SDK at an internal or alternative endpoint.
+ *
+ * @example Config.setBaseUrl("https://aggregator.api.sui-prod.int.bluefin.io")
+ */
+function setBaseUrl(url: string): void {
+  API_ENDPOINTS.MAIN = url;
+}
+
+/**
+ * Get the current base URL used for aggregator API calls.
+ */
+function getBaseUrl(): string {
+  return API_ENDPOINTS.MAIN;
+}
+
+/**
+ * Reset the base URL to the default public endpoint.
+ */
+function resetBaseUrl(): void {
+  API_ENDPOINTS.MAIN = DEFAULT_BASE_URL;
+}
+
 const Config = {
   setApiKey,
   getApiKey,
@@ -99,6 +124,9 @@ const Config = {
   getPythConnection,
   setEndpointProvider,
   getEndpointProvider,
+  setBaseUrl,
+  getBaseUrl,
+  resetBaseUrl,
 };
 
 export { Config };
