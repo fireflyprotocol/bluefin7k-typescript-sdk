@@ -2,8 +2,8 @@ import {
   Transaction,
   TransactionObjectArgument,
 } from "@mysten/sui/transactions";
-import { Config, TxSorSwap } from "../types/aggregator";
-import { ProtocolContract } from "./protocols";
+import { Config, TxSorSwap } from "../types/aggregator.js";
+import { ProtocolContract } from "./protocols/index.js";
 
 export async function swapWithRoute({
   route,

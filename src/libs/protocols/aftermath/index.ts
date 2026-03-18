@@ -1,6 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { BaseContract } from "../base";
-import { normalizeTokenType } from "../../../utils/token";
+import { BaseContract } from "../base.js";
+import { normalizeTokenType } from "../../../utils/token.js";
 
 export class AfterMathContract extends BaseContract {
   async swap(tx: Transaction) {

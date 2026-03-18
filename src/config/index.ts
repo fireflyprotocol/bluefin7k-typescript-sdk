@@ -5,7 +5,7 @@ import {
   SuiPriceServiceConnection,
   SuiPythClient,
 } from "@pythnetwork/pyth-sui-js";
-import { API_ENDPOINTS, DEFAULT_BASE_URL } from "../constants/apiEndpoints";
+import { API_ENDPOINTS, DEFAULT_BASE_URL } from "../constants/apiEndpoints.js";
 
 type EndpointProvider = "Bluefin7k" | "Bluefin7kV2";
 

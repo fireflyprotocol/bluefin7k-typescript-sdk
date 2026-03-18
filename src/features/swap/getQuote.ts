@@ -1,12 +1,12 @@
 import { normalizeStructTag, normalizeSuiObjectId } from "@mysten/sui/utils";
-import { Config } from "../../config";
-import { fetchClient } from "../../config/fetchClient";
-import { getMainEndpointUrl } from "../../constants/apiEndpoints";
+import { Config } from "../../config/index.js";
+import { fetchClient } from "../../config/fetchClient.js";
+import { getMainEndpointUrl } from "../../constants/apiEndpoints.js";
 import {
   isBluefinXRouting,
   QuoteResponse,
   SourceDex,
-} from "../../types/aggregator";
+} from "../../types/aggregator.js";
 import { v4 as uuidv4 } from "uuid";
 
 interface Params {

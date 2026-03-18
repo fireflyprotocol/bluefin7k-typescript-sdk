@@ -3,8 +3,8 @@ import {
   TransactionObjectArgument,
 } from "@mysten/sui/transactions";
 import { normalizeStructTag, parseStructTag, toHex } from "@mysten/sui/utils";
-import { Config, ExtraOracle, TxSorSwap } from "../../types/aggregator";
-import { SuiUtils } from "../../utils/sui";
+import { Config, ExtraOracle, TxSorSwap } from "../../types/aggregator.js";
+import { SuiUtils } from "../../utils/sui.js";
 
 export interface BaseContractParams {
   swapInfo: TxSorSwap;

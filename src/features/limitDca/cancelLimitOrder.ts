@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { LIMIT_ORDER_MODULE_ID } from "./constants";
+import { LIMIT_ORDER_MODULE_ID } from "./constants.js";
 
 interface CancelLimitOrderParams {
   orderId: string;

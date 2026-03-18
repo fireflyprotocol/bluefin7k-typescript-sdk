@@ -1,7 +1,7 @@
 import type { SuiClientTypes } from "@mysten/sui/client";
 import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
-import { Config } from "../config/index";
-import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../constants/_7k";
+import { Config } from "../config/index.js";
+import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../constants/_7k.js";
 
 export const SuiUtils = {
   mergeCoins(

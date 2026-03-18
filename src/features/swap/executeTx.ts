@@ -1,9 +1,9 @@
 import type { SuiClientTypes } from "@mysten/sui/client";
 import { fromBase64 } from "@mysten/sui/utils";
-import { Config } from "../../config/index";
-import { executeBluefinTx } from "../../libs/protocols/bluefinx/client";
-import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
-import { AggregatorTx } from "../../types/aggregator";
+import { Config } from "../../config/index.js";
+import { executeBluefinTx } from "../../libs/protocols/bluefinx/client.js";
+import { BluefinXTx } from "../../libs/protocols/bluefinx/types.js";
+import { AggregatorTx } from "../../types/aggregator.js";
 
 /**
  * Execute a transaction after it is signed

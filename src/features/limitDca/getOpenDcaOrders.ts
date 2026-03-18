@@ -1,7 +1,7 @@
-import { fetchClient } from "../../config/fetchClient";
-import { formatQueryParams } from "../../libs/url";
-import { LO_DCA_API } from "./constants";
-import { DcaOrder, LoDcaQueryParams } from "./types";
+import { fetchClient } from "../../config/fetchClient.js";
+import { formatQueryParams } from "../../libs/url.js";
+import { LO_DCA_API } from "./constants.js";
+import { DcaOrder, LoDcaQueryParams } from "./types.js";
 
 interface Params {
   owner: string;

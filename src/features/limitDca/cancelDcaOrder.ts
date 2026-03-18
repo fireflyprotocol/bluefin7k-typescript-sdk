@@ -1,5 +1,5 @@
 import { Transaction } from "@mysten/sui/transactions";
-import { DCA_ORDER_MODULE_ID } from "./constants";
+import { DCA_ORDER_MODULE_ID } from "./constants.js";
 
 interface CancelDcaOrderParams {
   orderId: string;

@@ -1,7 +1,7 @@
 import { Transaction, TransactionResult } from "@mysten/sui/transactions";
 import { normalizeStructTag } from "@mysten/sui/utils";
-import { SUI_TYPE } from "../constants/tokens";
-import { getCoinOjectIdsByAmount } from "./getCoinOjectIdsByAmount";
+import { SUI_TYPE } from "../constants/tokens.js";
+import { getCoinOjectIdsByAmount } from "./getCoinOjectIdsByAmount.js";
 
 export const getSplitCoinForTx = async (
   account: string,

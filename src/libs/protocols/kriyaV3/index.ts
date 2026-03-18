@@ -1,8 +1,8 @@
 import { Transaction } from "@mysten/sui/transactions";
 
-import { BaseContract } from "../base";
+import { BaseContract } from "../base.js";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { normalizeTokenType } from "../../../utils/token";
+import { normalizeTokenType } from "../../../utils/token.js";
 
 export class KriyaV3Contract extends BaseContract {
   async swap(tx: Transaction) {

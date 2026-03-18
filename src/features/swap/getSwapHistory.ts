@@ -1,6 +1,6 @@
-import { fetchClient } from "../../config/fetchClient";
-import { API_ENDPOINTS } from "../../constants/apiEndpoints";
-import { formatQueryParams } from "../../libs/url";
+import { fetchClient } from "../../config/fetchClient.js";
+import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
+import { formatQueryParams } from "../../libs/url.js";
 
 interface Params {
   owner: string;

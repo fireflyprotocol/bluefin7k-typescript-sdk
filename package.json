@@ -6,11 +6,11 @@
   "exports": {
     ".": {
       "types": "./lib/esm/types/index.d.ts",
-      "default": "./lib/esm/index.mjs"
+      "default": "./lib/esm/index.js"
     }
   },
   "types": "./lib/esm/types/index.d.ts",
-  "main": "./lib/esm/index.mjs",
+  "main": "./lib/esm/index.js",
   "files": [
     "lib/**/*"
   ],
@@ -24,7 +24,7 @@
     "lint": "npx eslint ./src",
     "prettier": "npx prettier --write .",
     "build": "npm run clean && npm run build:esm",
-    "build:esm": "tsc -p ./configs/tsconfig.json && tsc-alias -p ./configs/tsconfig.json -f && mv lib/esm/index.js lib/esm/index.mjs",
+    "build:esm": "tsc -p ./configs/tsconfig.json",
     "prepack": "npm run build",
     "test": "NODE_OPTIONS='--import tsx' mocha --timeout 60000",
     "publish:patch": "npm version patch --no-git-tag-version && npm publish --access public",
@@ -55,7 +55,6 @@
     "eslint": "^9.29.0",
     "husky": "^9.1.7",
     "mocha": "^11.6.0",
-    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.1"

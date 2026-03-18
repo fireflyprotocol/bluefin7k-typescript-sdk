@@ -5,9 +5,9 @@ import {
   normalizeStructTag,
   SUI_CLOCK_OBJECT_ID,
 } from "@mysten/sui/utils";
-import { SuiUtils } from "../../../utils/sui";
-import { BaseContract } from "../base";
-import type { BluefinXV2Extra } from "./types";
+import { SuiUtils } from "../../../utils/sui.js";
+import { BaseContract } from "../base.js";
+import type { BluefinXV2Extra } from "./types.js";
 
 // BCS structure for QuoteV2 (no taker field)
 // IMPORTANT: Field order must match Move struct exactly!
@@ -112,4 +112,4 @@ export class BluefinXV2Contract extends BaseContract {
   }
 }
 
-export { BluefinXV2Extra } from "./types";
+export { BluefinXV2Extra } from "./types.js";

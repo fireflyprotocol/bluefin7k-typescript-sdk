@@ -1,8 +1,8 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { SuiUtils } from "../../utils/sui";
-import { BaseContract } from "./base";
-import { getDefaultSqrtPriceLimit } from "./utils";
+import { SuiUtils } from "../../utils/sui.js";
+import { BaseContract } from "./base.js";
+import { getDefaultSqrtPriceLimit } from "./utils.js";
 
 export class FerraCLMMContract extends BaseContract {
   async swap(tx: Transaction) {

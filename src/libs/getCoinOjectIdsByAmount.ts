@@ -1,5 +1,5 @@
 import type { SuiClientTypes } from "@mysten/sui/client";
-import { Config } from "../config/index";
+import { Config } from "../config/index.js";
 
 const orderByKey = <T extends object>(
   array: T[],
