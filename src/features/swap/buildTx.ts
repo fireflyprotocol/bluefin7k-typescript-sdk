@@ -4,26 +4,26 @@ import {
   TransactionResult,
 } from "@mysten/sui/transactions";
 import { isValidSuiAddress, toBase64, toHex } from "@mysten/sui/utils";
-import { Config } from "../../config/index";
-import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../../constants/_7k";
-import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx";
-import { groupSwapRoutes } from "../../libs/groupSwapRoutes";
-import { BluefinXExtra } from "../../libs/protocols/bluefinx/index";
-import { sponsorBluefinX } from "../../libs/protocols/bluefinx/client";
-import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
-import { swapWithRoute } from "../../libs/swapWithRoute";
+import { Config } from "../../config/index.js";
+import { _7K_CONFIG, _7K_PACKAGE_ID, _7K_VAULT } from "../../constants/_7k.js";
+import { getSplitCoinForTx } from "../../libs/getSplitCoinForTx.js";
+import { groupSwapRoutes } from "../../libs/groupSwapRoutes.js";
+import { BluefinXExtra } from "../../libs/protocols/bluefinx/index.js";
+import { sponsorBluefinX } from "../../libs/protocols/bluefinx/client.js";
+import { BluefinXTx } from "../../libs/protocols/bluefinx/types.js";
+import { swapWithRoute } from "../../libs/swapWithRoute.js";
 import {
   BuildTxResult,
   ExtraOracle,
   isBluefinXRouting,
   QuoteResponse,
   TxSorSwap,
-} from "../../types/aggregator";
-import { BuildTxParams } from "../../types/tx";
-import { SuiUtils } from "../../utils/sui";
-import { denormalizeTokenType } from "../../utils/token";
-import { getConfig } from "./config";
-import { ORACLE_BASED_SOURCES } from "./getQuote";
+} from "../../types/aggregator.js";
+import { BuildTxParams } from "../../types/tx.js";
+import { SuiUtils } from "../../utils/sui.js";
+import { denormalizeTokenType } from "../../utils/token.js";
+import { getConfig } from "./config.js";
+import { ORACLE_BASED_SOURCES } from "./getQuote.js";
 
 // --- Dynamic gas budget constants ---
 // The SDK dry run underestimates for complex aggregator PTBs (150+ commands)
@@ -119,10 +119,11 @@ export const buildTx = async ({
     }),
   );
   if (coinObjects.length > 0) {
-    const mergeCoin: any =
+    const mergeCoin = (
       coinObjects.length > 1
         ? SuiUtils.mergeCoins(coinObjects, tx)
-        : coinObjects[0];
+        : coinObjects[0]
+    ) as TransactionObjectArgument;
 
     const returnAmountAfterCommission =
       (BigInt(10000 - _commission.commissionBps) *
@@ -208,13 +209,15 @@ const estimateAndSetGasBudget = async (
     tx.setSenderIfNotSet(accountAddress);
     const txBytes = await tx.build({ client });
 
-    const dryRun = await client.dryRunTransactionBlock({
-      transactionBlock: txBytes,
+    const dryRun = await client.core.simulateTransaction({
+      transaction: txBytes,
+      include: { effects: true },
     });
 
-    if (dryRun.effects.status.status === "success") {
+    const txResult = dryRun.Transaction ?? dryRun.FailedTransaction;
+    if (dryRun.$kind === "Transaction" && txResult?.effects?.status.success) {
       const { computationCost, storageCost, storageRebate } =
-        dryRun.effects.gasUsed;
+        txResult.effects.gasUsed;
 
       const netGas =
         BigInt(computationCost) + BigInt(storageCost) - BigInt(storageRebate);
@@ -237,7 +240,7 @@ const estimateAndSetGasBudget = async (
       return;
     }
 
-    console.warn("[gas] dry run reverted:", dryRun.effects.status.error);
+    console.warn("[gas] dry run reverted:", txResult?.effects?.status.error);
   } catch (err) {
     console.warn("[gas] estimation failed:", err);
   }
@@ -251,7 +254,12 @@ const getPythPriceFeeds = (res: QuoteResponse) => {
   for (const s of res.swaps) {
     for (const o of (s.extra?.oracles || []) as ExtraOracle[]) {
       // FIXME: deprecation price_identifier in the next version
-      const bytes = o.Pyth?.bytes || (o.Pyth as any)?.price_identifier?.bytes;
+      type LegacyPyth = {
+        bytes?: number[];
+        price_identifier?: { bytes: number[] };
+      };
+      const bytes =
+        o.Pyth?.bytes || (o.Pyth as LegacyPyth)?.price_identifier?.bytes;
       if (bytes) {
         ids.add("0x" + toHex(Uint8Array.from(bytes)));
       }
@@ -271,6 +279,7 @@ const updatePythPriceFeedsIfAny = async (
     const prices =
       await Config.getPythConnection().getPriceFeedsUpdateData(pythIds);
     const ids = await Config.getPythClient().updatePriceFeeds(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tx as any,
       prices,
       pythIds,

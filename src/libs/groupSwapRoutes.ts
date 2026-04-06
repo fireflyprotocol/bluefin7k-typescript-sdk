@@ -5,8 +5,8 @@ import {
   SorSwap,
   QuoteResponse,
   TxSorSwap,
-} from "../types/aggregator";
-import { denormalizeTokenType } from "../utils/token";
+} from "../types/aggregator.js";
+import { denormalizeTokenType } from "../utils/token.js";
 
 export function groupSwapRoutes(quoteResponse: QuoteResponse): TxSorSwap[][] {
   if (!quoteResponse.routes || !quoteResponse.swaps) {

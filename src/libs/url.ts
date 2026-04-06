@@ -1,4 +1,4 @@
-export function formatQueryParams(params: Record<string, any>) {
+export function formatQueryParams(params: object) {
   let str = "";
   Object.entries(params).forEach(([key, value]) => {
     if (Array.isArray(value)) {

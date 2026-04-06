@@ -1,7 +1,7 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { assert } from "chai";
-import { buildTx, getQuote, isBluefinXRouting, SourceDex } from "../src";
-import { BluefinXTx } from "../src/libs/protocols/bluefinx/types";
+import { buildTx, getQuote, isBluefinXRouting, SourceDex } from "../src/index.js";
+import { BluefinXTx } from "../src/libs/protocols/bluefinx/types.js";
 
 interface Params {
   tokenIn: string;
@@ -17,7 +17,7 @@ interface Params {
   // taker?: string;
 }
 export const testSwap = async (
-  client: SuiClient,
+  client: SuiGrpcClient,
   address: string,
   params: Params,
 ) => {
@@ -42,18 +42,18 @@ export const testSwap = async (
   if (tx instanceof BluefinXTx) {
     return;
   }
-  const result = await client.devInspectTransactionBlock({
-    sender: address,
-    transactionBlock: tx,
+  const simResult = await client.simulateTransaction({
+    transaction: tx,
+    include: { effects: true, events: true },
   });
 
   assert(
-    result.effects.status.status === "success",
-    `Transaction failed: ${result.error}`,
+    simResult.$kind === "Transaction" && simResult.Transaction?.effects?.status.success,
+    `Transaction failed: ${simResult.$kind === "FailedTransaction" ? simResult.FailedTransaction?.effects?.status.error : "unknown"}`,
   );
-  const swapEvent = result.events.find((e) =>
-    e.type.endsWith("::settle::Swap"),
-  )?.parsedJson;
+  const swapEvent = simResult.Transaction?.events?.find((e) =>
+    e.eventType.endsWith("::settle::Swap"),
+  )?.json;
 
   // console.log(swapEvent);
   assert(swapEvent, "Swap event not found");

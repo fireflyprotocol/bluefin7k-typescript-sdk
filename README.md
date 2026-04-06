@@ -66,7 +66,7 @@ example, to avoid rate limits when routing through BluefinX — you'll need to
 request an API key directly from Bluefin.
 
 ```typescript
-import { Config } from "@7kprotocol/sdk-ts";
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 Config.setBluefinXApiKey("YOUR_BLUEFINX_API_KEY");
 console.log("BluefinX API key", Config.getBluefinXApiKey());
@@ -74,14 +74,57 @@ console.log("BluefinX API key", Config.getBluefinXApiKey());
 
 ### Set Sui Client
 
+The SDK uses two separate Sui clients:
+
+- **Primary client** — Accepts any `ClientWithCoreApi` implementation (gRPC,
+  JSON-RPC, or GraphQL). Set via `setSuiClient`. Defaults to **gRPC** for best
+  performance.
+- **JSON-RPC client** (`SuiJsonRpcClient`) — Required by
+  `@pythnetwork/pyth-sui-js` for Pyth price feed operations. Set separately via
+  `setJsonRpcClient` if you need to customize the endpoint.
+
+#### Using gRPC (Recommended)
+
 ```typescript
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiGrpcClient } from "@mysten/sui/grpc";
 import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 
 const network = "mainnet";
-const suiClient = new SuiClient({ url: getFullnodeUrl(network) });
+
+// Primary client for transaction execution, simulation, and coin fetching
+const suiClient = new SuiGrpcClient({
+  baseUrl: "https://fullnode.mainnet.sui.io:443",
+  network,
+});
 Config.setSuiClient(suiClient);
-console.log("Sui client", Config.getSuiClient());
+```
+
+#### Using JSON-RPC
+
+```typescript
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+
+const network = "mainnet";
+
+const suiClient = new SuiJsonRpcClient({
+  url: getJsonRpcFullnodeUrl(network),
+  network,
+});
+Config.setSuiClient(suiClient);
+```
+
+#### Configuring Pyth Sui Client
+
+```typescript
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+
+const jsonRpcClient = new SuiJsonRpcClient({
+  url: getJsonRpcFullnodeUrl("mainnet"),
+  network: "mainnet",
+});
+Config.setJsonRpcClient(jsonRpcClient);
 ```
 
 Note: this package only supports **mainnet**.

@@ -1,5 +1,5 @@
-import { CoinStruct, PaginatedCoins } from "@mysten/sui/client";
-import { Config } from "../config/index";
+import type { SuiClientTypes } from "@mysten/sui/client";
+import { Config } from "../config/index.js";
 
 const orderByKey = <T extends object>(
   array: T[],
@@ -13,8 +13,8 @@ const orderByKey = <T extends object>(
   do {
     swapped = false;
     for (let i = 0; i < array.length - 1; i++) {
-      const a = BigInt((array[i] as any)[key]);
-      const b = BigInt((array[i + 1] as any)[key]);
+      const a = BigInt((array[i] as Record<string, unknown>)[key] as string);
+      const b = BigInt((array[i + 1] as Record<string, unknown>)[key] as string);
       if (sortBy === "desc" ? a < b : a > b) {
         const temp = array[i];
         array[i] = array[i + 1];
@@ -32,22 +32,22 @@ export const getCoinOjectIdsByAmount = async (
   coinType: string,
 ): Promise<{
   objectIds: string[];
-  objectCoins: CoinStruct[];
+  objectCoins: SuiClientTypes.Coin[];
   balance: string;
 }> => {
-  let coinBalances: CoinStruct[] = [];
+  let coinBalances: SuiClientTypes.Coin[] = [];
   let hasNextPage = true;
   let nextCursor: string | null | undefined = undefined;
   while (hasNextPage) {
     try {
-      const coins: PaginatedCoins = await Config.getSuiClient().getCoins({
+      const coins = await Config.getSuiClient().core.listCoins({
         owner: address,
         coinType,
         cursor: nextCursor,
       });
-      coinBalances = [...coinBalances, ...coins.data];
+      coinBalances = [...coinBalances, ...coins.objects];
       hasNextPage = coins.hasNextPage;
-      nextCursor = coins.nextCursor;
+      nextCursor = coins.cursor;
     } catch (error) {
       console.error("Error fetching data:", error);
       hasNextPage = false;
@@ -67,10 +67,10 @@ export const getCoinOjectIdsByAmount = async (
     ) ?? [];
   let balance = "0";
   const objectIds: string[] = [];
-  const objectCoins: CoinStruct[] = [];
+  const objectCoins: SuiClientTypes.Coin[] = [];
   for (const coin of coinObj) {
     balance = (BigInt(coin.balance) + BigInt(balance)).toString(10);
-    objectIds.push(coin.coinObjectId);
+    objectIds.push(coin.objectId);
     objectCoins.push(coin);
     if (BigInt(balance) >= BigInt(amount)) {
       break;

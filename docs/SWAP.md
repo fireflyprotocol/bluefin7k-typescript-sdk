@@ -91,7 +91,7 @@ address. This is required for partner tracking and analytics purposes.
 ## Full Example
 
 ```typescript
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 
 import { getQuote, buildTx, executeTx, BluefinXTx } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
 

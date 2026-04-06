@@ -1,11 +1,9 @@
-import {
-  SuiTransactionBlockResponse,
-  SuiTransactionBlockResponseOptions,
-} from "@mysten/sui/client";
-import { Config } from "../../config/index";
-import { executeBluefinTx } from "../../libs/protocols/bluefinx/client";
-import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
-import { AggregatorTx } from "../../types/aggregator";
+import type { SuiClientTypes } from "@mysten/sui/client";
+import { fromBase64 } from "@mysten/sui/utils";
+import { Config } from "../../config/index.js";
+import { executeBluefinTx } from "../../libs/protocols/bluefinx/client.js";
+import { BluefinXTx } from "../../libs/protocols/bluefinx/types.js";
+import { AggregatorTx } from "../../types/aggregator.js";
 
 /**
  * Execute a transaction after it is signed
@@ -23,25 +21,25 @@ import { AggregatorTx } from "../../types/aggregator";
  * ```
  * @param tx - AggregatorTx - received from `buildTx`
  * @param signature - User signature after signing the transaction
- * @param signedTxBytes - Signed transaction bytes after signing the transaction
- * @param options - Options for the transaction
- * @returns `SuiTransactionBlockResponse`
+ * @param signedTxBytes - Signed transaction bytes (base64) after signing the transaction
+ * @param include - Options for which fields to include in the response
+ * @returns `SuiClientTypes.TransactionResult`
  */
 export const executeTx = async (
   tx: AggregatorTx,
   signature: string,
   signedTxBytes: string,
-  options?: SuiTransactionBlockResponseOptions,
+  include?: SuiClientTypes.TransactionInclude,
 ) => {
   const isBluefinTx = tx instanceof BluefinXTx;
   const client = Config.getSuiClient();
-  let res: SuiTransactionBlockResponse;
+  let res: SuiClientTypes.TransactionResult;
   if (isBluefinTx) {
     try {
       const result = await executeBluefinTx(tx, signature);
-      res = await client.waitForTransaction({
+      res = await client.core.waitForTransaction({
         digest: result.txDigest,
-        options,
+        include,
       });
     } catch (e) {
       throw Error(
@@ -49,10 +47,10 @@ export const executeTx = async (
       );
     }
   } else {
-    res = await client.executeTransactionBlock({
-      transactionBlock: signedTxBytes,
-      signature,
-      options,
+    res = await client.core.executeTransaction({
+      transaction: fromBase64(signedTxBytes),
+      signatures: [signature],
+      include,
     });
   }
 

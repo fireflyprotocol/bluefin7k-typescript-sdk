@@ -1,10 +1,10 @@
 import { assert } from "chai";
-import { Config } from "../src/config/index";
+import { Config } from "../src/config/index.js";
 import {
   API_ENDPOINTS,
   DEFAULT_BASE_URL,
   getMainEndpointUrl,
-} from "../src/constants/apiEndpoints";
+} from "../src/constants/apiEndpoints.js";
 
 describe("Config.setBaseUrl / getBaseUrl / resetBaseUrl", () => {
   afterEach(() => {

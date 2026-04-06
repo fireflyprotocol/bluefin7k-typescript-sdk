@@ -1,7 +1,7 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
-import { SuiUtils } from "../../utils/sui";
-import { BaseContract } from "./base";
+import { SuiUtils } from "../../utils/sui.js";
+import { BaseContract } from "./base.js";
 
 export class CetusDLMMContract extends BaseContract {
   async swap(tx: Transaction) {

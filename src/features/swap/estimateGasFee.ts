@@ -1,11 +1,11 @@
 import { SUI_DECIMALS } from "@mysten/sui/utils";
-import { Config } from "../../config/index";
-import { isBluefinXRouting } from "../../types/aggregator";
-import { EstimateGasFeeParams } from "../../types/tx";
-import { formatBalance } from "../../utils/number";
-import { getSuiPrice } from "../prices/index";
-import { buildTx } from "./buildTx";
-import { BluefinXTx } from "../../libs/protocols/bluefinx/types";
+import { Config } from "../../config/index.js";
+import { isBluefinXRouting } from "../../types/aggregator.js";
+import { EstimateGasFeeParams } from "../../types/tx.js";
+import { formatBalance } from "../../utils/number.js";
+import { getSuiPrice } from "../prices/index.js";
+import { buildTx } from "./buildTx.js";
+import { BluefinXTx } from "../../libs/protocols/bluefinx/types.js";
 
 export async function estimateGasFee({
   quoteResponse,
@@ -38,15 +38,14 @@ export async function estimateGasFee({
   const suiPrice = _suiPrice || (await getSuiPrice());
   const suiDecimals = SUI_DECIMALS;
 
-  const {
-    effects: { gasUsed, status },
-  } = await Config.getSuiClient().devInspectTransactionBlock({
-    sender: accountAddress,
-    transactionBlock: tx,
+  const simResult = await Config.getSuiClient().core.simulateTransaction({
+    transaction: tx,
+    include: { effects: true },
   });
 
-  if (status.status !== "success") return 0;
+  if (simResult.$kind !== "Transaction" || !simResult.Transaction?.effects?.status.success) return 0;
 
+  const gasUsed = simResult.Transaction.effects.gasUsed;
   const fee =
     BigInt(gasUsed.computationCost) +
     BigInt(gasUsed.storageCost) -

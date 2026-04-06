@@ -2,7 +2,7 @@ import {
   Transaction,
   TransactionObjectArgument,
 } from "@mysten/sui/transactions";
-import { BluefinXTx } from "../libs/protocols/bluefinx/types";
+import { BluefinXTx } from "../libs/protocols/bluefinx/types.js";
 export { BluefinXTx };
 
 export type SourceDex =
@@ -44,6 +44,7 @@ export type SorSwap = {
   assetOut: string;
   functionName: string;
   arguments: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extra?: any;
 };
 

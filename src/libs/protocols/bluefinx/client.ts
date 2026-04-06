@@ -1,13 +1,13 @@
-import { Config } from "../../../config/index";
-import { getMainEndpointUrl } from "../../../constants/apiEndpoints";
+import { Config } from "../../../config/index.js";
+import { getMainEndpointUrl } from "../../../constants/apiEndpoints.js";
 import {
   BluefinXTx,
   SponsorRequest,
   SponsorResponse,
   SwapResponse,
-} from "./types";
+} from "./types.js";
 
-const request = async <T = any>(path: string, body: any) => {
+const request = async <T = unknown>(path: string, body: unknown) => {
   const headers = new Headers({
     "Content-Type": "application/json",
   });

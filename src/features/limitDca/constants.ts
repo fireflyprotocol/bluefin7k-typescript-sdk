@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "../../constants/apiEndpoints";
+import { API_ENDPOINTS } from "../../constants/apiEndpoints.js";
 
 export const GLOBAL_CONFIG_ID =
   "0xffc7f420b481ed7a012b42e125fd7e5716b5673759cf4629e5fcfebce970a72d";

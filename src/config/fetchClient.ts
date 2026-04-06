@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from "../constants/apiEndpoints";
-import { Config } from "./index";
+import { API_ENDPOINTS } from "../constants/apiEndpoints.js";
+import { Config } from "./index.js";
 
 export async function fetchClient(
   input: string,
