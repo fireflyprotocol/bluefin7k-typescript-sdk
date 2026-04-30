@@ -189,16 +189,37 @@ export const buildTx = async ({
   return { tx, coinOut };
 };
 
-// ---------------------------------------------------------------------------
-// Dynamic gas estimation via dry run + safety multiplier
-// ---------------------------------------------------------------------------
-// Why not just remove setGasBudget and let the SDK auto-estimate?
-// Because the SDK's dry run was returning ~0.07 SUI for complex aggregator
-// routes that actually needed more at execution time (confirmed by Fordefi).
-// We do our own dry run and apply a 2x multiplier to cover state drift
-// between simulation and execution (STEAMM bToken burns, dynamic fields, etc).
-// Sui only charges actual gas consumed, so a higher budget costs nothing extra.
-// ---------------------------------------------------------------------------
+// We size the gas budget ourselves because @mysten/sui's auto-estimator
+// was too low for our multi-step swaps and txs were failing on chain.
+// We dry-run and double the result for safety. Sui only charges actual
+// gas used, so over-budgeting costs the user nothing.
+//
+// Edge case: a swap that destroys lots of coin objects can get back a
+// big storage rebate, making the dry-run's net gas negative. Doubling a
+// negative number is still negative, so the budget would fall through
+// to the MIN floor — which is too small to actually run the swap. When
+// that happens, base the budget on computation cost instead (always
+// positive).
+export const computeGasBudget = ({
+  computationCost,
+  netGas,
+}: {
+  computationCost: bigint;
+  netGas: bigint;
+}): bigint => {
+  let maxGasBudget = MAX_GAS_BUDGET;
+  if (netGas > MAX_GAS_BUDGET) {
+    maxGasBudget = netGas;
+  }
+  let budget =
+    netGas > 0n
+      ? netGas * GAS_BUDGET_SAFETY_MULTIPLIER
+      : computationCost * GAS_BUDGET_SAFETY_MULTIPLIER;
+  if (budget > maxGasBudget) budget = maxGasBudget;
+  if (budget < MIN_GAS_BUDGET) budget = MIN_GAS_BUDGET;
+  return budget;
+};
+
 const estimateAndSetGasBudget = async (
   tx: Transaction,
   accountAddress: string,
@@ -222,14 +243,10 @@ const estimateAndSetGasBudget = async (
       const netGas =
         BigInt(computationCost) + BigInt(storageCost) - BigInt(storageRebate);
 
-      let maxGasBudget = MAX_GAS_BUDGET;
-      if (netGas > MAX_GAS_BUDGET) {
-        maxGasBudget = netGas;
-      }
-
-      let budget = netGas * GAS_BUDGET_SAFETY_MULTIPLIER;
-      if (budget > maxGasBudget) budget = maxGasBudget;
-      if (budget < MIN_GAS_BUDGET) budget = MIN_GAS_BUDGET;
+      const budget = computeGasBudget({
+        computationCost: BigInt(computationCost),
+        netGas,
+      });
 
       console.log(
         `[gas] dry run: ${netGas} MIST (${Number(netGas) / 1e9} SUI)` +
