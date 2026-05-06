@@ -1,19 +1,24 @@
 import { assert } from "chai";
-import { getConfig, DEFAULT_CONFIG } from "../src/features/swap/config.js";
+import { getConfig } from "../src/features/swap/config.js";
 import { Config } from "../src/types/aggregator.js";
+
+// Minimal Config fixture for tests. The fields the SDK actually exercises in
+// these tests are the turbos package + version; everything else is filler so
+// the value is structurally a Config. Casting via `as unknown as Config` keeps
+// the tests honest without forcing every interface field into the fixture.
+const FIXTURE = {
+  turbos: {
+    name: "Turbos Finance",
+    package:
+      "0xa5a0c25c79e428eba04fb98b3fb2a34db45ab26d4c8faf0d7e39d66a63891e64",
+    version:
+      "0xf1cf0e81048df168ebeb1b8030fad24b3e0b53ae827c25053fff0779c1445b6f",
+  },
+} as unknown as Config;
 
 describe("getConfig — configOverride", () => {
   it("returns the override unchanged when no swapViaPartner is provided", async () => {
-    const candidate: Config = {
-      ...DEFAULT_CONFIG,
-      turbos: {
-        ...DEFAULT_CONFIG.turbos,
-        package:
-          "0xa5a0c25c79e428eba04fb98b3fb2a34db45ab26d4c8faf0d7e39d66a63891e64",
-      },
-    };
-
-    const result = await getConfig(undefined, candidate);
+    const result = await getConfig(undefined, FIXTURE);
 
     assert.equal(
       result.turbos.package,
@@ -22,7 +27,7 @@ describe("getConfig — configOverride", () => {
     );
     assert.equal(
       result.turbos.version,
-      DEFAULT_CONFIG.turbos.version,
+      "0xf1cf0e81048df168ebeb1b8030fad24b3e0b53ae827c25053fff0779c1445b6f",
       "non-overridden fields should be preserved from the override",
     );
   });
@@ -34,7 +39,7 @@ describe("getConfig — configOverride", () => {
       feePercentage1e6: 1000,
     };
 
-    const result = await getConfig(partner, DEFAULT_CONFIG);
+    const result = await getConfig(partner, FIXTURE);
 
     assert.deepEqual(
       result.swapViaPartner,
@@ -52,9 +57,9 @@ describe("getConfig — configOverride", () => {
     SdkConfig.setBaseUrl("http://127.0.0.1:1");
 
     try {
-      const result = await getConfig(undefined, DEFAULT_CONFIG);
+      const result = await getConfig(undefined, FIXTURE);
       assert.isObject(result);
-      assert.equal(result.turbos.package, DEFAULT_CONFIG.turbos.package);
+      assert.equal(result.turbos.package, FIXTURE.turbos.package);
     } finally {
       SdkConfig.setBaseUrl(original);
     }

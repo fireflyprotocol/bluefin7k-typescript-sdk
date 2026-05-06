@@ -46,12 +46,10 @@ The SDK fetches protocol config from the aggregator API with a 60-second TTL
 cache:
 
 - `getConfig()` → calls `GET /config` on the aggregator API
-- Falls back to `DEFAULT_CONFIG` in `src/features/swap/config.ts` if API is
-  unavailable
+- Throws if `/config` is unreachable. The SDK does **not** carry a hardcoded
+  fallback — stale package IDs in client-side bundles caused real on-chain
+  failures (BET-3924, BET-3930), so the contract is fail-loud, not fail-stale.
 - Config contains package IDs and shared object addresses for each DEX protocol
-
-**When a protocol upgrades on-chain, both the aggregator API config AND the
-SDK's `DEFAULT_CONFIG` fallback must be updated.**
 
 ## Project Structure
 
@@ -67,7 +65,7 @@ src/
 │   ├── swap/
 │   │   ├── getQuote.ts               # Quote fetching, DEFAULT_SOURCES list
 │   │   ├── buildTx.ts                # Transaction building, gas estimation via dry run
-│   │   └── config.ts                 # Protocol config fetch + DEFAULT_CONFIG fallback
+│   │   └── config.ts                 # Protocol config fetch (throws on /config failure)
 │   ├── prices/                       # Token price lookups
 │   └── limitDca/                     # Limit order and DCA features
 ├── libs/
@@ -130,9 +128,9 @@ steamm_oracle_quoter_v2, bluefinx, RFQ
   (`@bluefin-exchange/bluefin7k-aggregator-sdk`), not internal paths like
   `lib/cjs/constants/...`. Use `Config.setBaseUrl()` instead of hacking around
   this.
-- **`DEFAULT_CONFIG` in `src/features/swap/config.ts`** is a fallback when the
-  aggregator API is unreachable. Keep it in sync with the aggregator API's
-  `config.json`.
+- **No hardcoded protocol config in the SDK.** Removed in BET-3930. If
+  `/config` fails to fetch, `getConfig` throws and `buildTx` propagates the
+  error. Stale fallbacks would silently ship wrong package IDs to wallets.
 - **Gas estimation** uses a 2x safety multiplier on dry run results to account
   for state drift between simulation and execution (especially for Steamm's
   dynamic fields).
