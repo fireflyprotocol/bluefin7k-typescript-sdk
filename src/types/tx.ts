@@ -2,7 +2,7 @@ import {
   Transaction,
   TransactionObjectArgument,
 } from "@mysten/sui/transactions";
-import { Commission, QuoteResponse } from "./aggregator.js";
+import { Commission, Config, QuoteResponse } from "./aggregator.js";
 
 export interface CommonParams {
   /** Quote response from api */
@@ -46,6 +46,13 @@ export interface CommonParams {
    * In this case, the gas object is expected to be already set up correctly for the sponsored transaction.
    */
   isSponsored?: boolean;
+  /**
+   * Override the protocol config used to build the transaction instead of
+   * fetching `/config` from the aggregator. Use this to dry-run a swap PTB
+   * targeting a candidate package ID before committing the override to the
+   * aggregator's live config.
+   */
+  configOverride?: Config;
 }
 
 export interface BuildTxParams extends CommonParams {

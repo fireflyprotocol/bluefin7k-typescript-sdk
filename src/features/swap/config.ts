@@ -193,8 +193,16 @@ export async function getConfig(
         partnerAddress: string;
         feePercentage1e6: number;
       }
-    | undefined = undefined
+    | undefined = undefined,
+  configOverride?: Config,
 ) {
+  // Caller-supplied config takes precedence over both cache and HTTP fetch.
+  // Used by drift-detection bots to dry-run a swap PTB against a candidate
+  // package ID without waiting for the aggregator's /config TTL.
+  if (configOverride) {
+    return { ...configOverride, swapViaPartner };
+  }
+
   const ttl = 60;
   if (config && Date.now() - configTs < ttl * 1000) {
     return config;
@@ -207,7 +215,7 @@ export async function getConfig(
     configTs = Date.now();
     return config;
   } catch (error) {
-    console.log("Warning: falling back to default config in getConfig" + error)
+    console.log("Warning: falling back to default config in getConfig" + error);
     return DEFAULT_CONFIG;
   }
 }
