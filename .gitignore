@@ -68,6 +68,15 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# Yarn 4 (Berry) — keep releases/plugins/patches/sdks, ignore the cache/state
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
 # dotenv environment variables file
 .env
 .env.test

@@ -8,6 +8,7 @@ on:
 jobs:
   publish-ts:
     runs-on: ubuntu-latest
+    environment: sui-prod
     steps:
       - uses: actions/checkout@v4
 
@@ -17,11 +18,14 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
-        run: npm install
+        run: yarn install --immutable
 
       - name: Build
-        run: npm run build
+        run: yarn run build
 
       - name: Publish to NPM
         run: npm publish
