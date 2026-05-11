@@ -1,6 +1,6 @@
 {
   "name": "@bluefin-exchange/bluefin7k-aggregator-sdk",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "",
   "type": "module",
   "exports": {
@@ -27,14 +27,15 @@
     "build:esm": "tsc -p ./configs/tsconfig.json",
     "prepack": "npm run build",
     "test": "NODE_OPTIONS='--import tsx' mocha --timeout 60000",
-    "publish:patch": "npm version patch --no-git-tag-version && npm publish --access public",
-    "publish:minor": "npm version minor --no-git-tag-version && npm publish --access public",
-    "publish:major": "npm version major --no-git-tag-version && npm publish --access public",
-    "publish:beta": "npm version prerelease --preid=beta --no-git-tag-version && npm publish --tag beta --access public"
+    "publish:patch": "npm version patch --no-git-tag-version && npm publish",
+    "publish:minor": "npm version minor --no-git-tag-version && npm publish",
+    "publish:major": "npm version major --no-git-tag-version && npm publish",
+    "publish:beta": "npm version prerelease --preid=beta --no-git-tag-version && npm publish --tag beta"
   },
   "engines": {
     "node": ">=24"
   },
+  "packageManager": "yarn@4.14.1",
   "keywords": [
     "Bluefin7k Aggregator",
     "DEX Aggregator",
@@ -48,6 +49,8 @@
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.26.0",
+    "@mysten/sui": "^2.0.0",
+    "@pythnetwork/pyth-sui-js": "^2.1.0",
     "@types/chai": "^5.2.2",
     "@types/eslint__js": "^8.42.3",
     "@types/mocha": "^10.0.10",
@@ -64,6 +67,9 @@
     "@pythnetwork/pyth-sui-js": "^2.1.0"
   },
   "overrides": {
+    "@mysten/sui": "^2.0.0"
+  },
+  "resolutions": {
     "@mysten/sui": "^2.0.0"
   },
   "dependencies": {
