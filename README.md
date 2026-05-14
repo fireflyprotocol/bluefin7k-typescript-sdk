@@ -1,3 +1,5 @@
+https://github.com/govex-dao/decision-markets-v3/blob/main/dex-aggregator-integration-help.md
+
 # Bluefin7k Aggregator TypeScript SDK
 
 ## Installation
