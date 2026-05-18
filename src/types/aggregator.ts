@@ -18,7 +18,6 @@ export type SourceDex =
   | "flowx_v3"
   | "bluefin"
   | "bluefinx"
-  | "RFQ"
   | "springsui"
   | "obric"
   | "stsui"
