@@ -8,11 +8,9 @@ import { SUI_TYPE } from "../constants/tokens.js";
 
 export const getSplitCoinForTx = async (
   account: string,
-  _amount: string,
   splits: string[],
   coinType: string,
   inheritTx?: Transaction,
-  _inspecTransaction?: boolean,
   isSponsored = false,
 ): Promise<{
   tx: Transaction;

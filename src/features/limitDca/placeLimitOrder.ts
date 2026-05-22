@@ -10,7 +10,6 @@ export interface PlaceLimitOrderParams {
   rate: bigint;
   slippage: bigint;
   expireTs: bigint;
-  devInspect?: boolean;
 }
 
 export async function placeLimitOrder({
@@ -21,15 +20,11 @@ export async function placeLimitOrder({
   rate,
   slippage,
   expireTs,
-  devInspect,
 }: PlaceLimitOrderParams) {
   const { tx, coinData: payCoin } = await getSplitCoinForTx(
     accountAddress,
-    payCoinAmount.toString(),
     [payCoinAmount.toString()],
     denormalizeTokenType(payCoinType),
-    undefined,
-    devInspect,
   );
 
   tx.moveCall({

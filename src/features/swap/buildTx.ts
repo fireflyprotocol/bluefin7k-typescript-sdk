@@ -89,11 +89,9 @@ export const buildTx = async ({
   } else {
     const { coinData: _data } = await getSplitCoinForTx(
       accountAddress,
-      quoteResponse.swapAmountWithDecimal,
       splits,
       denormalizeTokenType(quoteResponse.tokenIn),
       tx,
-      devInspect,
       isSponsored || isBluefinX,
     );
     coinData = _data;
