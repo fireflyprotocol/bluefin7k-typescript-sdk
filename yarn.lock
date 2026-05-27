@@ -35,7 +35,7 @@ __metadata:
   resolution: "@bluefin-exchange/bluefin7k-aggregator-sdk@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.26.0"
-    "@mysten/sui": "npm:^2.16.2"
+    "@mysten/sui": "npm:^2.17.0"
     "@pythnetwork/pyth-sui-js": "npm:^2.1.0"
     "@types/chai": "npm:^5.2.2"
     "@types/eslint__js": "npm:^8.42.3"
@@ -49,7 +49,7 @@ __metadata:
     typescript-eslint: "npm:^8.34.1"
     uuid: "npm:^13.0.0"
   peerDependencies:
-    "@mysten/sui": ^2.16.2
+    "@mysten/sui": ^2.17.0
     "@pythnetwork/pyth-sui-js": ^2.1.0
   languageName: unknown
   linkType: soft
@@ -441,9 +441,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mysten/sui@npm:^2.16.2":
-  version: 2.16.2
-  resolution: "@mysten/sui@npm:2.16.2"
+"@mysten/sui@npm:^2.17.0":
+  version: 2.17.0
+  resolution: "@mysten/sui@npm:2.17.0"
   dependencies:
     "@graphql-typed-document-node/core": "npm:^3.2.0"
     "@mysten/bcs": "npm:^2.0.5"
@@ -460,7 +460,7 @@ __metadata:
     graphql: "npm:^16.12.0"
     poseidon-lite: "npm:0.2.1"
     valibot: "npm:^1.2.0"
-  checksum: 10c0/00c654a3d0c750c28f8424e9f27818d3f6efed5fc676dfd5fe8576d40cf36f44de0bf9b22ac7bea37b40834adcfba6534d72a1de4cfc4f5c39a528c8c2d279d4
+  checksum: 10c0/d9e5cbb67fb0f2e10f4136284a6a9d382862a2401e1e957db339442e95c90a95b3c762d65d7e5a5ca72514493b317226feda84cdb1b3569a5cab9924edb90ff5
   languageName: node
   linkType: hard
 
