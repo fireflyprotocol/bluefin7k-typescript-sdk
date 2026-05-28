@@ -89,11 +89,9 @@ export const buildTx = async ({
   } else {
     const { coinData: _data } = await getSplitCoinForTx(
       accountAddress,
-      quoteResponse.swapAmountWithDecimal,
       splits,
       denormalizeTokenType(quoteResponse.tokenIn),
       tx,
-      devInspect,
       isSponsored || isBluefinX,
     );
     coinData = _data;
@@ -154,7 +152,17 @@ export const buildTx = async ({
     });
 
     if (!extendTx) {
-      tx.transferObjects([mergeCoin], tx.pure.address(accountAddress));
+      // SIP-58: deposit the swap output back into the sender's
+      // address-balance accumulator rather than leaving it as a discrete
+      // Coin<T> object. This keeps user balances consolidated in the
+      // accumulator so subsequent txs can source from it via
+      // coinWithBalance without first having to pick up a new coin
+      // object.
+      tx.moveCall({
+        target: "0x2::coin::send_funds",
+        typeArguments: [quoteResponse.tokenOut],
+        arguments: [mergeCoin, tx.pure.address(accountAddress)],
+      });
     } else {
       coinOut = mergeCoin;
     }
@@ -186,7 +194,19 @@ export const buildTx = async ({
     };
   }
 
-  await estimateAndSetGasBudget(tx, accountAddress);
+  // When the caller supplied their own tx via extendTx, skip the gas
+  // estimation step. estimateAndSetGasBudget calls `tx.build({client})`
+  // which resolves all CoinWithBalance intents IN-PLACE. After that, any
+  // commands the caller adds afterwards (e.g. firefly LP splitCoins on
+  // coinAObject/coinBObject) capture references against the
+  // post-resolution tx state — but the caller's Proxy refs still report
+  // pre-resolution command indices, so the final PTB references commands
+  // that don't exist where expected, producing SecondaryIndexOutOfBounds
+  // at simulate time. The caller is responsible for setting gas on the
+  // final tx (typically the wallet does this during signing).
+  if (!extendTx) {
+    await estimateAndSetGasBudget(tx, accountAddress);
+  }
   return { tx, coinOut };
 };
 
