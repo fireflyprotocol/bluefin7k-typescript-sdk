@@ -249,6 +249,15 @@ const estimateAndSetGasBudget = async (
 
   try {
     tx.setSenderIfNotSet(accountAddress);
+    // gRPC `simulateTransaction` ENFORCES the tx's gas budget at runtime
+    // (unlike JSON-RPC dryRun, which ignored it) and never does gas
+    // selection here, so building with no budget bakes in mysten's too-low
+    // auto-estimate and the dry run aborts with InsufficientGas before we
+    // can read real usage. Set an ample ceiling first; the success branch
+    // below overrides it with the tight computed budget, and if estimation
+    // fails the tx safely retains this max budget (Sui only charges gas
+    // actually used).
+    tx.setGasBudget(MAX_GAS_BUDGET);
     const txBytes = await tx.build({ client });
 
     const dryRun = await client.core.simulateTransaction({
