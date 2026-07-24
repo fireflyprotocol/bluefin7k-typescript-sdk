@@ -1,6 +1,5 @@
 import type { ClientWithCoreApi } from "@mysten/sui/client";
 import { SuiGrpcClient } from "@mysten/sui/grpc";
-import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import {
   SuiPriceServiceConnection,
   SuiPythClient,
@@ -29,18 +28,8 @@ let suiClient: ClientWithCoreApi = new SuiGrpcClient({
   network: "mainnet",
 });
 
-/**
- * JSON-RPC client — required by SuiPythClient (@pythnetwork/pyth-sui-js).
- * The Pyth SDK has not yet migrated to the new gRPC client, so a separate
- * JSON-RPC client is maintained exclusively for Pyth price feed operations.
- */
-let jsonRpcClient: SuiJsonRpcClient = new SuiJsonRpcClient({
-  url: getJsonRpcFullnodeUrl("mainnet"),
-  network: "mainnet",
-});
-
 let pythClient: SuiPythClient = new SuiPythClient(
-  jsonRpcClient,
+  suiClient,
   PYTH_STATE_ID,
   WORMHOLE_STATE_ID,
 );
@@ -79,14 +68,9 @@ function getSuiClient(): ClientWithCoreApi {
 
 function setSuiClient(client: ClientWithCoreApi): void {
   suiClient = client;
-}
-
-function getJsonRpcClient(): SuiJsonRpcClient {
-  return jsonRpcClient;
-}
-
-function setJsonRpcClient(client: SuiJsonRpcClient): void {
-  jsonRpcClient = client;
+  // Keep Pyth on the same transport/network as the primary client. Pyth v4
+  // reads through `.core`, so any @mysten/sui v2 client works here.
+  pythClient.provider = client;
 }
 
 function setPythClient(client: SuiPythClient): void {
@@ -146,8 +130,6 @@ const Config = {
   getBluefinAggregatorApiKey,
   setSuiClient,
   getSuiClient,
-  setJsonRpcClient,
-  getJsonRpcClient,
   setPythClient,
   getPythClient,
   setPythConnection,

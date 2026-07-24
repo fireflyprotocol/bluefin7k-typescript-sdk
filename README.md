@@ -74,14 +74,12 @@ console.log("BluefinX API key", Config.getBluefinXApiKey());
 
 ### Set Sui Client
 
-The SDK uses two separate Sui clients:
-
-- **Primary client** — Accepts any `ClientWithCoreApi` implementation (gRPC,
-  JSON-RPC, or GraphQL). Set via `setSuiClient`. Defaults to **gRPC** for best
-  performance.
-- **JSON-RPC client** (`SuiJsonRpcClient`) — Required by
-  `@pythnetwork/pyth-sui-js` for Pyth price feed operations. Set separately via
-  `setJsonRpcClient` if you need to customize the endpoint.
+The SDK uses a single primary Sui client that accepts any `ClientWithCoreApi`
+implementation (gRPC, JSON-RPC, or GraphQL). Set via `setSuiClient`. Defaults to
+**gRPC** for best performance. This client is used for transaction execution,
+simulation, coin fetching, and Pyth price feed operations (as of
+`@pythnetwork/pyth-sui-js` v4, Pyth reads transport-agnostically through the
+unified `.core` API).
 
 #### Using gRPC (Recommended)
 
@@ -97,34 +95,6 @@ const suiClient = new SuiGrpcClient({
   network,
 });
 Config.setSuiClient(suiClient);
-```
-
-#### Using JSON-RPC
-
-```typescript
-import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
-import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
-
-const network = "mainnet";
-
-const suiClient = new SuiJsonRpcClient({
-  url: getJsonRpcFullnodeUrl(network),
-  network,
-});
-Config.setSuiClient(suiClient);
-```
-
-#### Configuring Pyth Sui Client
-
-```typescript
-import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
-import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
-
-const jsonRpcClient = new SuiJsonRpcClient({
-  url: getJsonRpcFullnodeUrl("mainnet"),
-  network: "mainnet",
-});
-Config.setJsonRpcClient(jsonRpcClient);
 ```
 
 Note: this package only supports **mainnet**.
