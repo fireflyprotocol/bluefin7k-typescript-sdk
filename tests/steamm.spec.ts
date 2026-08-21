@@ -139,21 +139,24 @@ describe("Steamm PTB shape", () => {
 
   it("cranks fees with Quoter and LpType before the bToken types", async () => {
     const quoter = `${ORACLE}::omm_v2::OracleQuoterV2`;
-    const { tx, contract } = build(quoter, true);
-    await contract.swap(tx);
+    for (const xToY of [true, false]) {
+      const { tx, contract } = build(quoter, xToY);
+      await contract.swap(tx);
 
-    const crank = moveCalls(tx).find(
-      (c) => c.module === "fee_crank" && c.function === "crank_fees",
-    );
-    assert(
-      crank,
-      "crank_fees is missing. It is the only non-aborting drain for " +
-        "pool.protocol_fees, so omitting it strands them silently",
-    );
-    assert.deepEqual(
-      [...crank.typeArguments],
-      [MARKET, COIN_A, COIN_B, quoter, LP, B_A, B_B].map(normalizeStructTag),
-    );
+      const crank = moveCalls(tx).find(
+        (c) => c.module === "fee_crank" && c.function === "crank_fees",
+      );
+      assert(
+        crank,
+        "crank_fees is missing. It is the only non-aborting drain for " +
+          "pool.protocol_fees, so omitting it strands them silently",
+      );
+      assert.deepEqual(
+        [...crank.typeArguments],
+        [MARKET, COIN_A, COIN_B, quoter, LP, B_A, B_B].map(normalizeStructTag),
+        `crank_fees follows pool orientation, not swap direction (xToY=${xToY})`,
+      );
+    }
   });
 
   it("mints the input leg and opens a zero coin on the output leg", async () => {
@@ -203,6 +206,55 @@ describe("Steamm PTB shape", () => {
       moveCalls(omm.tx).some((c) => c.function === "mint_btoken"),
       "omm came from pool_script_v2, which used the singular bank api",
     );
+  });
+
+  it("puts both price updates ahead of the coins in omm swap arguments", async () => {
+    const quoters = {
+      omm: `${ORACLE}::omm::OracleQuoter`,
+      omm_v2: `${ORACLE}::omm_v2::OracleQuoterV2`,
+    };
+
+    for (const [module, quoter] of Object.entries(quoters)) {
+      for (const xToY of [true, false]) {
+        const { tx, contract } = build(quoter, xToY);
+        await contract.swap(tx);
+
+        const commands = tx.getData().commands;
+        const swap = moveCalls(tx).find(
+          (c) => c.module === module && c.function === "swap",
+        );
+        assert(swap, `${module}::swap not emitted`);
+
+        const sourceOf = (index: number) => {
+          const arg = swap.arguments[index];
+          assert(
+            arg.$kind === "NestedResult",
+            `${module} arg ${index} is ${arg.$kind}, not a command result`,
+          );
+          const source = commands[arg.NestedResult[0]];
+          assert(
+            source.$kind === "MoveCall" && source.MoveCall,
+            `${module} arg ${index} does not come from a move call`,
+          );
+          return `${source.MoveCall.module}::${source.MoveCall.function}`;
+        };
+
+        assert.deepEqual(
+          [sourceOf(4), sourceOf(5)],
+          ["oracles::get_pyth_price", "oracles::get_pyth_price"],
+          `${module} xToY=${xToY}: the price updates are arguments 4 and 5. ` +
+            "@suilend/steamm-sdk codegen emits the coins there instead, so " +
+            "aligning with it silently transposes this call",
+        );
+        assert.deepEqual(
+          [sourceOf(6), sourceOf(7)],
+          xToY
+            ? ["bank::mint_btoken", "coin::zero"]
+            : ["coin::zero", "bank::mint_btoken"],
+          `${module} xToY=${xToY}: coin_a and coin_b follow pool orientation`,
+        );
+      }
+    }
   });
 });
 
