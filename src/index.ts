@@ -17,6 +17,7 @@ import {
   getQuote,
   getSwapHistory,
   DEFAULT_SOURCES,
+  ORACLE_BASED_SOURCES,
 } from "./features/swap/index.js";
 
 import {
@@ -59,6 +60,7 @@ export {
   executeTx,
   executeBluefinTx,
   DEFAULT_SOURCES,
+  ORACLE_BASED_SOURCES,
 
   // limit order
   placeLimitOrder,
@@ -96,6 +98,7 @@ export default {
   executeTx,
   executeBluefinTx,
   DEFAULT_SOURCES,
+  ORACLE_BASED_SOURCES,
 
   // limit order
   placeLimitOrder,
