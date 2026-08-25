@@ -1,4 +1,7 @@
-import { Transaction } from "@mysten/sui/transactions";
+import {
+  Transaction,
+  TransactionObjectArgument,
+} from "@mysten/sui/transactions";
 import {
   normalizeStructTag,
   parseStructTag,
@@ -20,6 +23,19 @@ export type SteamExtra = {
   oracles: ExtraOracle[];
   oracleIndexes?: number[];
 };
+
+type SteammTypes = {
+  lendingMarket: string;
+  coinTypeA: string;
+  coinTypeB: string;
+  bTokenA: string;
+  bTokenB: string;
+  quoter: string;
+  lp: string;
+};
+
+type BankApi = "singular" | "plural";
+
 export class SteammContract extends BaseContract<SteamExtra> {
   async swap(tx: Transaction) {
     if (this.extra.poolStructTag.includes("omm::OracleQuoter")) {
@@ -33,6 +49,165 @@ export class SteammContract extends BaseContract<SteamExtra> {
   }
 
   cpmmSwap(tx: Transaction) {
+    const types = this.resolveTypes();
+
+    return this.swapThroughBanks(tx, types, "plural", (a, b, amountIn) => {
+      tx.moveCall({
+        target: `${this.config.steamm.package}::cpmm::swap`,
+        typeArguments: [types.bTokenA, types.bTokenB, types.lp],
+        arguments: [
+          tx.object(this.swapInfo.poolId),
+          a,
+          b,
+          tx.pure.bool(this.swapInfo.swapXtoY),
+          amountIn,
+          tx.pure.u64(0),
+        ],
+      });
+    });
+  }
+
+  ommSwap(tx: Transaction, version: "v1" | "v2") {
+    const types = this.resolveTypes();
+    const [priceA, priceB] = this.getOraclePriceUpdate(tx);
+
+    return this.swapThroughBanks(tx, types, "singular", (a, b, amountIn) => {
+      tx.moveCall({
+        target: `${this.config.steamm.package}::${
+          version === "v1" ? "omm" : "omm_v2"
+        }::swap`,
+        typeArguments: [
+          types.lendingMarket,
+          types.coinTypeA,
+          types.coinTypeB,
+          types.bTokenA,
+          types.bTokenB,
+          types.lp,
+        ],
+        arguments: [
+          tx.object(this.swapInfo.poolId),
+          tx.object(this.extra.bankA),
+          tx.object(this.extra.bankB),
+          tx.object(this.extra.lendingMarketA),
+          priceA,
+          priceB,
+          a,
+          b,
+          tx.pure.bool(this.swapInfo.swapXtoY),
+          amountIn,
+          tx.pure.u64(0),
+          tx.object(SUI_CLOCK_OBJECT_ID),
+        ],
+      });
+    });
+  }
+
+  private swapThroughBanks(
+    tx: Transaction,
+    types: SteammTypes,
+    bankApi: BankApi,
+    poolSwap: (
+      coinA: TransactionObjectArgument,
+      coinB: TransactionObjectArgument,
+      amountIn: ReturnType<typeof SuiUtils.getCoinValue>,
+    ) => void,
+  ): TransactionObjectArgument {
+    const extra = this.extra;
+    const xToY = this.swapInfo.swapXtoY;
+    const steamm = this.config.steamm.package;
+    const mint = bankApi === "plural" ? "mint_btokens" : "mint_btoken";
+    const burn = bankApi === "plural" ? "burn_btokens" : "burn_btoken";
+
+    const bankIn = xToY ? extra.bankA : extra.bankB;
+    const bankOut = xToY ? extra.bankB : extra.bankA;
+    const bTokenInType = xToY ? types.bTokenA : types.bTokenB;
+    const bTokenOutType = xToY ? types.bTokenB : types.bTokenA;
+    const coinInType = xToY ? types.coinTypeA : types.coinTypeB;
+    const coinOutType = xToY ? types.coinTypeB : types.coinTypeA;
+
+    const bankInTypes = [types.lendingMarket, coinInType, bTokenInType];
+    const bankOutTypes = [types.lendingMarket, coinOutType, bTokenOutType];
+
+    const bTokenIn = tx.moveCall({
+      target: `${steamm}::bank::${mint}`,
+      typeArguments: bankInTypes,
+      arguments: [
+        tx.object(bankIn),
+        tx.object(extra.lendingMarketA),
+        this.inputCoinObject,
+        this.getInputCoinValue(tx),
+        tx.object(SUI_CLOCK_OBJECT_ID),
+      ],
+    })[0];
+    const bTokenOut = SuiUtils.zeroCoin(tx, bTokenOutType);
+
+    poolSwap(
+      xToY ? bTokenIn : bTokenOut,
+      xToY ? bTokenOut : bTokenIn,
+      SuiUtils.getCoinValue(bTokenInType, bTokenIn, tx),
+    );
+
+    const redeemed = tx.moveCall({
+      target: `${steamm}::bank::${burn}`,
+      typeArguments: bankOutTypes,
+      arguments: [
+        tx.object(bankOut),
+        tx.object(extra.lendingMarketA),
+        bTokenOut,
+        SuiUtils.getCoinValue(bTokenOutType, bTokenOut, tx),
+        tx.object(SUI_CLOCK_OBJECT_ID),
+      ],
+    })[0];
+
+    const refunded = tx.moveCall({
+      target: `${steamm}::bank::${burn}`,
+      typeArguments: bankInTypes,
+      arguments: [
+        tx.object(bankIn),
+        tx.object(extra.lendingMarketA),
+        bTokenIn,
+        SuiUtils.getCoinValue(bTokenInType, bTokenIn, tx),
+        tx.object(SUI_CLOCK_OBJECT_ID),
+      ],
+    })[0];
+    tx.mergeCoins(this.inputCoinObject, [refunded]);
+
+    SuiUtils.transferOrDestroyZeroCoin(
+      tx,
+      bTokenInType,
+      bTokenIn,
+      this.currentAccount,
+    );
+    SuiUtils.transferOrDestroyZeroCoin(
+      tx,
+      bTokenOutType,
+      bTokenOut,
+      this.currentAccount,
+    );
+
+    tx.moveCall({
+      target: `${steamm}::fee_crank::crank_fees`,
+      typeArguments: [
+        types.lendingMarket,
+        types.coinTypeA,
+        types.coinTypeB,
+        types.quoter,
+        types.lp,
+        types.bTokenA,
+        types.bTokenB,
+      ],
+      arguments: [
+        tx.object(this.swapInfo.poolId),
+        tx.object(extra.bankA),
+        tx.object(extra.bankB),
+      ],
+    });
+
+    SuiUtils.collectDust(tx, this.swapInfo.assetIn, this.inputCoinObject);
+    return redeemed;
+  }
+
+  private resolveTypes(): SteammTypes {
     const extra = this.extra;
     if (
       !extra ||
@@ -44,132 +219,32 @@ export class SteammContract extends BaseContract<SteamExtra> {
       !extra.lendingMarketA ||
       !extra.lendingMarketB
     ) {
-      throw new Error(`Invalid extra info for cpmmSwap`);
+      throw new Error(`Invalid extra info for steamm swap`);
     }
 
-    // the pool script v1 only support same lending market
     if (extra.lendingMarketA !== extra.lendingMarketB) {
-      throw new Error(`Invalid lending market for cpmmSwap`);
+      throw new Error(`Invalid lending market for steamm swap`);
     }
 
-    const [btokenA, bTokenB, _quoter, lp] = parseStructTag(
+    const [bTokenA, bTokenB, quoter, lp] = parseStructTag(
       extra.poolStructTag,
     ).typeParams;
-    const [lendingMarket, coinTypeA, _bTokenA] = parseStructTag(
+    const [lendingMarket, coinTypeA] = parseStructTag(
       extra.bankAStructTag,
     ).typeParams;
-    const [_lendingMarket, coinTypeB, _bTokenB] = parseStructTag(
-      extra.bankBStructTag,
-    ).typeParams;
+    const [, coinTypeB] = parseStructTag(extra.bankBStructTag).typeParams;
 
-    const xToY = this.swapInfo.swapXtoY;
-    const coinA = xToY
-      ? this.inputCoinObject
-      : SuiUtils.zeroCoin(tx, normalizeStructTag(coinTypeA));
-    const coinB = !xToY
-      ? this.inputCoinObject
-      : SuiUtils.zeroCoin(tx, normalizeStructTag(coinTypeB));
-
-    tx.moveCall({
-      target: `${this.config.steamm.script}::pool_script::cpmm_swap`,
-      typeArguments: [
-        lendingMarket,
-        coinTypeA,
-        coinTypeB,
-        btokenA,
-        bTokenB,
-        lp,
-      ].map(normalizeStructTag),
-      arguments: [
-        tx.object(this.swapInfo.poolId),
-        tx.object(extra.bankA),
-        tx.object(extra.bankB),
-        tx.object(extra.lendingMarketA),
-        coinA,
-        coinB,
-        tx.pure.bool(xToY),
-        this.getInputCoinValue(tx),
-        tx.pure.u64(0),
-        tx.object(SUI_CLOCK_OBJECT_ID),
-      ],
-    });
-    const coinIn = xToY ? coinA : coinB;
-    const coinOut = xToY ? coinB : coinA;
-    SuiUtils.collectDust(tx, this.swapInfo.assetIn, coinIn);
-    return coinOut;
+    return {
+      lendingMarket: normalizeStructTag(lendingMarket),
+      coinTypeA: normalizeStructTag(coinTypeA),
+      coinTypeB: normalizeStructTag(coinTypeB),
+      bTokenA: normalizeStructTag(bTokenA),
+      bTokenB: normalizeStructTag(bTokenB),
+      quoter: normalizeStructTag(quoter),
+      lp: normalizeStructTag(lp),
+    };
   }
 
-  ommSwap(tx: Transaction, version: "v1" | "v2") {
-    const extra = this.swapInfo.extra as SteamExtra;
-    if (
-      !extra ||
-      !extra.bankAStructTag ||
-      !extra.bankBStructTag ||
-      !extra.poolStructTag ||
-      !extra.bankA ||
-      !extra.bankB ||
-      !extra.lendingMarketA ||
-      !extra.lendingMarketB
-    ) {
-      throw new Error(`Invalid extra info for cpmmSwap`);
-    }
-
-    // the pool script v1 only support same lending market
-    if (extra.lendingMarketA !== extra.lendingMarketB) {
-      throw new Error(`Invalid lending market for ommSwap`);
-    }
-
-    const [btokenA, bTokenB, _quoter, lp] = parseStructTag(
-      extra.poolStructTag,
-    ).typeParams;
-    const [lendingMarket, coinTypeA, _bTokenA] = parseStructTag(
-      extra.bankAStructTag,
-    ).typeParams;
-    const [_lendingMarket, coinTypeB, _bTokenB] = parseStructTag(
-      extra.bankBStructTag,
-    ).typeParams;
-
-    const xToY = this.swapInfo.swapXtoY;
-    const coinA = xToY
-      ? this.inputCoinObject
-      : SuiUtils.zeroCoin(tx, normalizeStructTag(coinTypeA));
-    const coinB = !xToY
-      ? this.inputCoinObject
-      : SuiUtils.zeroCoin(tx, normalizeStructTag(coinTypeB));
-
-    const [priceA, priceB] = this.getOraclePriceUpdate(tx);
-    tx.moveCall({
-      target: `${this.config.steamm.script}::pool_script_v2::${
-        version === "v1" ? "omm_swap" : "omm_v2_swap"
-      }`,
-      typeArguments: [
-        lendingMarket,
-        coinTypeA,
-        coinTypeB,
-        btokenA,
-        bTokenB,
-        lp,
-      ].map(normalizeStructTag),
-      arguments: [
-        tx.object(this.swapInfo.poolId),
-        tx.object(extra.bankA),
-        tx.object(extra.bankB),
-        tx.object(extra.lendingMarketA),
-        priceA,
-        priceB,
-        coinA,
-        coinB,
-        tx.pure.bool(xToY),
-        this.getInputCoinValue(tx),
-        tx.pure.u64(0),
-        tx.object(SUI_CLOCK_OBJECT_ID),
-      ],
-    });
-    const coinIn = xToY ? coinA : coinB;
-    const coinOut = xToY ? coinB : coinA;
-    SuiUtils.collectDust(tx, this.swapInfo.assetIn, coinIn);
-    return coinOut;
-  }
   getOraclePriceUpdate(tx: Transaction) {
     const oracleA = this.getPythPriceInfoId(this.extra.oracles?.[0]);
     const oracleB = this.getPythPriceInfoId(this.extra.oracles?.[1]);
