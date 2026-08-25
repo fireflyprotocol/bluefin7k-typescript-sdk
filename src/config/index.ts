@@ -15,10 +15,6 @@ const WORMHOLE_STATE_ID =
 const PYTH_STATE_ID =
   "0x1f9310238ee9298fb703c3419030b35b22bb1cc37113e3bb5007c99aec79e5b8";
 
-// Pyth Pro is a separate deployment, not a new endpoint on the existing one.
-// Its guardian set signs VAAs the legacy Wormhole instance will not verify, and
-// its PriceInfoObjects live under a different state object. The endpoint and the
-// two state ids therefore only mean anything as a set -- see usePythPro.
 const HERMES_API_PRO = "https://pyth.dourolabs.app/hermes";
 const WORMHOLE_STATE_ID_PRO =
   "0xdbca52b9fb4f712e25f61f974586d93ac541bcf8389564f0323bb07215168b5c";
@@ -100,26 +96,6 @@ function getPythConnection(): SuiPriceServiceConnection {
   return pythConnection;
 }
 
-/**
- * Point both halves of the Pyth wiring at the Pro deployment together.
- *
- * setPythClient and setPythConnection can each be called on their own, and that
- * is the hazard this removes. Swap only the connection and you get Pro-signed
- * VAAs checked against the legacy state; swap only the client and you get
- * legacy VAAs checked against the Pro state. Both revert inside
- * wormhole::vaa::parse_and_verify, and neither failure mentions Pyth.
- *
- * Two shapes, because the credential cannot live in the same place for both:
- *
- * - { accessToken } for a server, which can hold the token and reach Pro
- *   directly.
- * - { updateDataUrl } for a browser, which cannot, and instead names an
- *   endpoint holding one on its behalf. The state ids still move: the VAAs that
- *   endpoint returns are Pro's, whoever fetched them.
- *
- * Call it before the first swap build. It replaces the client, so an earlier
- * setSuiClient stays in effect and a later one still applies.
- */
 function usePythPro(
   options: { accessToken: string } | { updateDataUrl: string },
 ): void {

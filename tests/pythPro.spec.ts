@@ -11,7 +11,6 @@ const WORMHOLE_STATE_ID_PRO =
 const PYTH_STATE_ID_LEGACY =
   "0x1f9310238ee9298fb703c3419030b35b22bb1cc37113e3bb5007c99aec79e5b8";
 
-/** The client keeps the ids in private fields; read them structurally. */
 const stateIdsOf = (client: unknown): string[] =>
   Object.values(client as Record<string, unknown>).filter(
     (v): v is string => typeof v === "string" && v.startsWith("0x"),
@@ -32,8 +31,6 @@ describe("usePythPro", () => {
     Config.usePythPro({ updateDataUrl: "https://api.example.invalid/updates" });
 
     const ids = stateIdsOf(Config.getPythClient());
-    // A Pro VAA does not verify against the legacy state, so the client has to
-    // move whenever the connection does.
     assert.include(ids, PYTH_STATE_ID_PRO);
     assert.include(ids, WORMHOLE_STATE_ID_PRO);
     assert.notInclude(ids, PYTH_STATE_ID_LEGACY);
@@ -73,8 +70,6 @@ describe("ProxyPriceServiceConnection", () => {
       "bb11",
     ]);
 
-    // The edge keys on the query string, so ordering or casing differences
-    // would split one answer across cache entries.
     assert.equal(seen, `${url}?ids=aa22,bb11`);
   });
 
