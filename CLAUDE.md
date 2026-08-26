@@ -106,11 +106,23 @@ npx mocha --no-config --require ts-node/register --timeout 60000 tests/config.sp
 
 ## Publishing
 
-```bash
-npm run publish:patch  # Bump patch version + publish to npm
-npm run publish:minor  # Bump minor version + publish to npm
-npm run publish:beta   # Publish beta tag
-```
+Releases go out from `.github/workflows/npm_publish.yaml` via npm OIDC Trusted
+Publishing — no stored npm token, provenance attached automatically. npm binds
+the trusted publisher to org + repo + *workflow filename* and a package supports
+exactly one, so that file is the only place this package is published from.
+
+- **Release (`latest`)**: bump `version` in `package.json`, merge, then push a
+  `bluefin7k-sdk-release-<version>` tag. The tag's version must equal
+  `package.json`'s, and the version must not already exist on npm.
+- **Canary (`next`)**: run the workflow manually (`Run workflow`) with dist-tag
+  `next` against a commit on `main`. The version is synthesized as
+  `<version>-next.g<sha>` and never committed back.
+- **Retrying a failed release**: do not push a second tag. Fix, merge, then
+  dispatch with dist-tag `latest` — the version comes from `package.json`, so
+  the release still ships under its intended version.
+
+The `publish:*` scripts in `package.json` publish from a workstation and bypass
+the trusted-publishing path (no provenance); prefer the workflow.
 
 ## Supported Protocols (DEFAULT_SOURCES)
 
