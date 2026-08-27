@@ -99,6 +99,59 @@ Config.setSuiClient(suiClient);
 
 Note: this package only supports **mainnet**.
 
+### Enable Pyth-priced sources
+
+A few liquidity sources price their swaps from a Pyth oracle, and `buildTx` has
+to attach a signed Pyth price update for a route that uses one:
+
+- `obric`
+- `haedal_pmm`
+- `sevenk_v1`
+- `steamm_oracle_quoter`
+- `steamm_oracle_quoter_v2`
+
+**These sources are off by default.** The SDK's built-in Pyth endpoint is the
+public Hermes service, which Pyth has retired and which now rejects
+unauthenticated requests, so the SDK cannot fetch a price update on its own.
+Quotes and swaps work fine without any Pyth setup — the aggregator routes
+around these sources, and in current mainnet liquidity that costs well under
+0.01% on major pairs.
+
+To turn them on, give the SDK a Pyth endpoint it can actually read:
+
+```typescript
+import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";
+
+// Server side, holding a Pyth Pro access token directly:
+Config.usePythPro({ accessToken: process.env.PYTH_ACCESS_TOKEN! });
+
+// Browser side, where a token cannot be shipped to the client — name your own
+// endpoint that holds the token on the page's behalf:
+Config.usePythPro({
+  updateDataUrl: "https://your.api.example/price-update-data",
+});
+```
+
+The `updateDataUrl` endpoint must answer `GET <url>?ids=<comma-separated feed
+ids>` with `{ "updateData": ["<base64 price update>", ...] }`.
+
+Call this once, before any `getQuote`, alongside your other `Config` setup.
+
+Already run your own Pyth plumbing? `Config.setPythConnection()` also enables
+these sources. If you take that route you must **also** call
+`Config.setPythClient()` with state ids from the same Pyth deployment your
+connection fetches from: `setPythConnection` moves the price fetch and
+`setPythClient` moves the on-chain state, and a mismatch between them fails
+inside Wormhole's VAA verification with an error that never mentions Pyth.
+`usePythPro` exists to move both together, so prefer it unless you need your
+own connection object.
+
+`setPythClient()` on its own does not enable these sources — it moves the
+on-chain state ids, not the price fetch.
+
+When a source is dropped because no Pyth endpoint is configured, the SDK logs a
+one-time warning naming the sources and the setup call.
+
 ### Set Endpoint Provider (API Version)
 
 You can toggle between different API versions:
