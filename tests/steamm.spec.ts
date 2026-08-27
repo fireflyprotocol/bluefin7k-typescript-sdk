@@ -241,7 +241,10 @@ describe("Steamm PTB shape", () => {
 
         assert.deepEqual(
           [sourceOf(4), sourceOf(5)],
-          ["oracles::get_pyth_price", "oracles::get_pyth_price"],
+          [
+            "oracles::get_pyth_price_pro_compatible",
+            "oracles::get_pyth_price_pro_compatible",
+          ],
           `${module} xToY=${xToY}: the price updates are arguments 4 and 5. ` +
             "@suilend/steamm-sdk codegen emits the coins there instead, so " +
             "aligning with it silently transposes this call",

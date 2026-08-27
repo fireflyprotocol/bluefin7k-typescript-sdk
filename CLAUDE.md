@@ -133,6 +133,14 @@ sevenk_v1, fullsail, cetus_dlmm, ferra_dlmm, ferra_clmm
 
 Additional protocols (not in defaults): bluefinx, RFQ
 
+> **`obric`, `haedal_pmm` and `sevenk_v1` cannot swap at all right now**, with or
+> without a Pyth key. Their latest on-chain packages still link the pre-upgrade
+> Pyth deployment, so they reject the `PriceInfoObject` this SDK produces, and
+> the pre-upgrade feeds they would need stopped updating at the 26 August 2026
+> cutover. Each needs an upstream republish against `pyth_pro_compatible`;
+> nothing in this repo fixes them. `steamm_oracle_quoter{,_v2}` are fine once
+> the aggregator's `/config` serves oracles v2. Details below.
+
 ### Oracle-priced sources need a Pyth opt-in
 
 `ORACLE_BASED_SOURCES` — obric, haedal_pmm, sevenk_v1, steamm_oracle_quoter,
@@ -154,11 +162,42 @@ state objects, per Pyth's
 Sui was a manual swap, not a DAO-side upgrade: apps name the Pyth package by
 object id, so nothing moved these for us.
 
-Note `obric` takes its Pyth state from the aggregator's `/config`
-(`obric.pythState`), not from these constants, while its `PriceInfoObject`
-arguments come from `updatePythPriceFeedsIfAny` and therefore from
-`getPythClient()`. Those two must name the same deployment or the swap aborts
-inside Pyth's state check.
+### Which oracle sources actually work post-upgrade
+
+`PriceInfoObject` is a **different Move type** per Pyth deployment: the upgraded
+Pyth package is a fresh publish, not an in-lineage upgrade, so its type origin
+differs. A protocol therefore has to link both Pyth packages side by side and
+expose a `*_pro_compatible` entry point before it can take an upgraded
+`PriceInfoObject`.
+
+Resolve a protocol's **latest** package through its `UpgradeCap.package` before
+concluding anything — `/config` serves lineage originals for several protocols
+(`steamm.oracle` is v1 while the head is v2), and linkage-checking a v1 id
+reports "not pro-compatible" even when the head is.
+
+| source | latest package | pro-compatible |
+|---|---|---|
+| `steamm` (cpmm) | v18 | n/a — cpmm consults no oracle |
+| `steamm_oracle_quoter{,_v2}` | steamm v18 + oracles v2 | **yes** |
+| `obric` | v10 | no |
+| `haedal_pmm` | v4 | no |
+| `sevenk_v1` | v2 | no |
+
+So the steamm adapter targets `oracles::get_pyth_price_pro_compatible`. That
+function exists only from **oracles v2**; `/config` currently serves
+`steamm.oracle` at v1, so these routes need a `/config` bump on the aggregator
+before they can build. Nothing is lost in the meantime — with a v1 oracle
+package the legacy getter fails too, on the `PriceInfoObject` argument.
+
+`obric` additionally takes its Pyth state from `/config` (`obric.pythState`),
+while its `PriceInfoObject` arguments come from `getPythClient()`. Measured on
+mainnet: an obric route built with the upgraded deployment fails resolution with
+`CommandArgumentError { arg_idx: 3, kind: TypeMismatch }` — argument 3 is the
+`PriceInfoObject`. Bumping `obric.pythState` alone will **not** fix it; obric
+v10 does not link the upgraded Pyth package at all.
+
+`tests/steammOracleProLive.spec.ts` pins both halves against mainnet and skips
+without `PYTH_KEY`.
 
 ## Important Notes
 

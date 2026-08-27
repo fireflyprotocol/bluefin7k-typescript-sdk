@@ -255,7 +255,7 @@ export class SteammContract extends BaseContract<SteamExtra> {
     }
 
     const [a] = tx.moveCall({
-      target: `${this.config.steamm.oracle}::oracles::get_pyth_price`,
+      target: `${this.config.steamm.oracle}::oracles::get_pyth_price_pro_compatible`,
       arguments: [
         tx.object(registry),
         tx.object(oracleA),
@@ -265,7 +265,7 @@ export class SteammContract extends BaseContract<SteamExtra> {
     });
 
     const [b] = tx.moveCall({
-      target: `${this.config.steamm.oracle}::oracles::get_pyth_price`,
+      target: `${this.config.steamm.oracle}::oracles::get_pyth_price_pro_compatible`,
       arguments: [
         tx.object(registry),
         tx.object(oracleB),
