@@ -133,6 +133,14 @@ sevenk_v1, fullsail, cetus_dlmm, ferra_dlmm, ferra_clmm
 
 Additional protocols (not in defaults): bluefinx, RFQ
 
+> **`obric`, `haedal_pmm` and `sevenk_v1` cannot swap at all right now**, with or
+> without a Pyth key. Their latest on-chain packages still link the pre-upgrade
+> Pyth deployment, so they reject the `PriceInfoObject` this SDK produces, and
+> the pre-upgrade feeds they would need stopped updating at the 26 August 2026
+> cutover. Each needs an upstream republish against `pyth_pro_compatible`;
+> nothing in this repo fixes them. `steamm_oracle_quoter{,_v2}` are fine once
+> the aggregator's `/config` serves oracles v2. Details below.
+
 ### Oracle-priced sources need a Pyth opt-in
 
 `ORACLE_BASED_SOURCES` — obric, haedal_pmm, sevenk_v1, steamm_oracle_quoter,

@@ -104,11 +104,19 @@ Note: this package only supports **mainnet**.
 A few liquidity sources price their swaps from a Pyth oracle, and `buildTx` has
 to attach a signed Pyth price update for a route that uses one:
 
-- `obric`
-- `haedal_pmm`
-- `sevenk_v1`
 - `steamm_oracle_quoter`
 - `steamm_oracle_quoter_v2`
+- `obric` — **not usable at present**, see below
+- `haedal_pmm` — **not usable at present**, see below
+- `sevenk_v1` — **not usable at present**, see below
+
+`obric`, `haedal_pmm` and `sevenk_v1` cannot be enabled by any client
+configuration today. Their on-chain packages still target the pre-upgrade Pyth
+deployment, so they reject the price objects this SDK produces, and the
+pre-upgrade price feeds they would otherwise read stopped updating at the
+26 August 2026 Pyth Core cutover. They need a new on-chain release from each
+protocol; supplying a Pyth key does not help. The rest of this section applies
+to the two `steamm_oracle_quoter` sources.
 
 **These sources are off by default.** Since the [Pyth Core
 upgrade](https://docs.pyth.network/price-feeds/core/upgrade/preparing) on
