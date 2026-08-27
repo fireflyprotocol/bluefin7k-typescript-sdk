@@ -110,14 +110,16 @@ to attach a signed Pyth price update for a route that uses one:
 - `steamm_oracle_quoter`
 - `steamm_oracle_quoter_v2`
 
-**These sources are off by default.** The SDK's built-in Pyth endpoint is the
-public Hermes service, which Pyth has retired and which now rejects
-unauthenticated requests, so the SDK cannot fetch a price update on its own.
-Quotes and swaps work fine without any Pyth setup — the aggregator routes
-around these sources, and in current mainnet liquidity that costs well under
-0.01% on major pairs.
+**These sources are off by default.** Since the [Pyth Core
+upgrade](https://docs.pyth.network/price-feeds/core/upgrade/preparing) on
+26 August 2026, every Hermes caller needs an API key, so the SDK cannot fetch a
+price update on its own. Quotes and swaps work fine without any Pyth setup — the
+aggregator routes around these sources, and in current mainnet liquidity that
+costs well under 0.01% on major pairs.
 
-To turn them on, give the SDK a Pyth endpoint it can actually read:
+The SDK targets the upgraded Pyth Core deployment: `https://pyth.dourolabs.app/hermes`
+with the upgraded Sui state objects. Get a key from Pyth Terminal (a free trial
+is included), then:
 
 ```typescript
 import { Config } from "@bluefin-exchange/bluefin7k-aggregator-sdk";

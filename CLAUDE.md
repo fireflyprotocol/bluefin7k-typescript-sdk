@@ -137,15 +137,28 @@ Additional protocols (not in defaults): bluefinx, RFQ
 
 `ORACLE_BASED_SOURCES` — obric, haedal_pmm, sevenk_v1, steamm_oracle_quoter,
 steamm_oracle_quoter_v2 — route through `updatePythPriceFeedsIfAny` in
-`buildTx`, the SDK's only VAA source. The default Pyth connection still points
-at the retired public Hermes, which answers 401, so `getQuote` drops these
-sources unless a caller has replaced that connection via `Config.usePythPro()`
-or `Config.setPythConnection()`. The filter applies to an explicit `sources`
+`buildTx`, the SDK's only VAA source. Since the Pyth Core upgrade of
+26 August 2026 every Hermes caller needs an API key, and the SDK ships no key,
+so `getQuote` drops these sources unless a caller has replaced the default
+connection via `Config.usePythPro()` or `Config.setPythConnection()`. The filter applies to an explicit `sources`
 list as well as the default one, because the documented
 `[...DEFAULT_SOURCES, "bluefinx"]` idiom copies the array.
 
 `Config.setPythClient()` alone does **not** open the gate: it moves the on-chain
 state ids, not the fetch.
+
+The SDK's Pyth defaults are the **upgraded** Pyth Core deployment —
+`https://pyth.dourolabs.app/hermes` plus the upgraded Sui Pyth and Wormhole
+state objects, per Pyth's
+[upgraded contract addresses](https://docs.pyth.network/price-feeds/core/upgrade/contracts#sui).
+Sui was a manual swap, not a DAO-side upgrade: apps name the Pyth package by
+object id, so nothing moved these for us.
+
+Note `obric` takes its Pyth state from the aggregator's `/config`
+(`obric.pythState`), not from these constants, while its `PriceInfoObject`
+arguments come from `updatePythPriceFeedsIfAny` and therefore from
+`getPythClient()`. Those two must name the same deployment or the swap aborts
+inside Pyth's state check.
 
 ## Important Notes
 
