@@ -73,8 +73,8 @@ function warnOracleSourcesDropped(): void {
   console.warn(
     "[7k] Oracle-priced sources " +
       `(${[...ORACLE_BASED_SOURCES].join(", ")}) were excluded from this quote: ` +
-      "they need a Pyth price update in buildTx, and the default Pyth endpoint " +
-      "is the retired public Hermes. Call Config.usePythPro({ accessToken }) or " +
+      "they need a Pyth price update in buildTx, and Pyth Core now requires an " +
+      "API key. Call Config.usePythPro({ accessToken }) or " +
       "Config.setPythConnection(...) to enable them.",
   );
 }

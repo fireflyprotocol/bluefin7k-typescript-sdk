@@ -8,7 +8,7 @@ const PYTH_STATE_ID_PRO =
   "0x03719fae774ddab3cfcaa53bbc046f0cbe21410019b6280811bf3f9f4b05839d";
 const WORMHOLE_STATE_ID_PRO =
   "0xdbca52b9fb4f712e25f61f974586d93ac541bcf8389564f0323bb07215168b5c";
-const PYTH_STATE_ID_LEGACY =
+const PYTH_STATE_ID_PRE_UPGRADE =
   "0x1f9310238ee9298fb703c3419030b35b22bb1cc37113e3bb5007c99aec79e5b8";
 
 const stateIdsOf = (client: unknown): string[] =>
@@ -23,8 +23,14 @@ const stubFetch = (impl: (url: string) => Response) => {
 };
 
 describe("usePythPro", () => {
-  it("leaves the default on the legacy state", () => {
-    assert.include(stateIdsOf(Config.getPythClient()), PYTH_STATE_ID_LEGACY);
+  it("does not move the state ids away from the default deployment", () => {
+    const before = stateIdsOf(Config.getPythClient());
+    assert.include(before, PYTH_STATE_ID_PRO);
+    assert.notInclude(before, PYTH_STATE_ID_PRE_UPGRADE);
+
+    Config.usePythPro({ accessToken: "not-a-real-token" });
+
+    assert.deepEqual(stateIdsOf(Config.getPythClient()), before);
   });
 
   it("moves the state ids and the connection together, for a browser", () => {
@@ -33,7 +39,7 @@ describe("usePythPro", () => {
     const ids = stateIdsOf(Config.getPythClient());
     assert.include(ids, PYTH_STATE_ID_PRO);
     assert.include(ids, WORMHOLE_STATE_ID_PRO);
-    assert.notInclude(ids, PYTH_STATE_ID_LEGACY);
+    assert.notInclude(ids, PYTH_STATE_ID_PRE_UPGRADE);
     assert.instanceOf(Config.getPythConnection(), ProxyPriceServiceConnection);
   });
 
