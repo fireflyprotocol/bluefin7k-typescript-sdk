@@ -40,9 +40,8 @@ let pythClient: SuiPythClient = new SuiPythClient(
   PYTH_STATE_ID,
   WORMHOLE_STATE_ID,
 );
-let pythConnection: SuiPriceServiceConnection = new SuiPriceServiceConnection(
-  HERMES_API,
-);
+const DEFAULT_PYTH_CONNECTION = new SuiPriceServiceConnection(HERMES_API);
+let pythConnection: SuiPriceServiceConnection = DEFAULT_PYTH_CONNECTION;
 let endpointProvider: EndpointProvider = "Bluefin7kV2";
 
 function setApiKey(key: string): void {
@@ -94,6 +93,10 @@ function setPythConnection(connection: SuiPriceServiceConnection): void {
 
 function getPythConnection(): SuiPriceServiceConnection {
   return pythConnection;
+}
+
+function hasPythOptIn(): boolean {
+  return pythConnection !== DEFAULT_PYTH_CONNECTION;
 }
 
 function usePythPro(
@@ -165,5 +168,5 @@ const Config = {
   resetBaseUrl,
 };
 
-export { Config };
+export { Config, hasPythOptIn };
 export type { EndpointProvider };

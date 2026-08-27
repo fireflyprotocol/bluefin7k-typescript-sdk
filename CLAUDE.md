@@ -127,11 +127,25 @@ the trusted-publishing path (no provenance); prefer the workflow.
 ## Supported Protocols (DEFAULT_SOURCES)
 
 suiswap, turbos, cetus, bluemove, kriya, kriya_v3, aftermath, deepbook_v3,
-flowx, flowx_v3, bluefin, springsui, obric, stsui, magma, haedal_pmm, momentum,
+flowx, flowx_v3, bluefin, springsui, obric, stsui, steamm,
+steamm_oracle_quoter, steamm_oracle_quoter_v2, magma, haedal_pmm, momentum,
 sevenk_v1, fullsail, cetus_dlmm, ferra_dlmm, ferra_clmm
 
-Additional protocols (not in defaults): steamm, steamm_oracle_quoter,
-steamm_oracle_quoter_v2, bluefinx, RFQ
+Additional protocols (not in defaults): bluefinx, RFQ
+
+### Oracle-priced sources need a Pyth opt-in
+
+`ORACLE_BASED_SOURCES` — obric, haedal_pmm, sevenk_v1, steamm_oracle_quoter,
+steamm_oracle_quoter_v2 — route through `updatePythPriceFeedsIfAny` in
+`buildTx`, the SDK's only VAA source. The default Pyth connection still points
+at the retired public Hermes, which answers 401, so `getQuote` drops these
+sources unless a caller has replaced that connection via `Config.usePythPro()`
+or `Config.setPythConnection()`. The filter applies to an explicit `sources`
+list as well as the default one, because the documented
+`[...DEFAULT_SOURCES, "bluefinx"]` idiom copies the array.
+
+`Config.setPythClient()` alone does **not** open the gate: it moves the on-chain
+state ids, not the fetch.
 
 ## Important Notes
 

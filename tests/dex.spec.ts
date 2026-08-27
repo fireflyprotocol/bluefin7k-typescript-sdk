@@ -1,6 +1,7 @@
 import "mocha";
 
 import { SuiGrpcClient } from "@mysten/sui/grpc";
+import { SuiPriceServiceConnection } from "@pythnetwork/pyth-sui-js";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
 import { expect } from "chai";
 import { SUI_TYPE } from "../src/constants/tokens.js";
@@ -403,6 +404,18 @@ describe("All sources test", () => {
   });
 });
 describe("sponsored tx", () => {
+  const defaultPythConnection = Config.getPythConnection();
+
+  before(() => {
+    Config.setPythConnection(
+      new SuiPriceServiceConnection("https://pyth.example.invalid/hermes"),
+    );
+  });
+
+  after(() => {
+    Config.setPythConnection(defaultPythConnection);
+  });
+
   it("should validate sponsored tx", async () => {
     const quote = await getQuote({
       amountIn: amountX,

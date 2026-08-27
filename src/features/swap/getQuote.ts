@@ -1,5 +1,5 @@
 import { normalizeStructTag, normalizeSuiObjectId } from "@mysten/sui/utils";
-import { Config } from "../../config/index.js";
+import { Config, hasPythOptIn } from "../../config/index.js";
 import { fetchClient } from "../../config/fetchClient.js";
 import { getMainEndpointUrl } from "../../constants/apiEndpoints.js";
 import {
@@ -65,6 +65,20 @@ export const ORACLE_BASED_SOURCES = new Set<SourceDex>([
   "steamm_oracle_quoter_v2",
 ]);
 
+let warnedOracleSourcesDropped = false;
+
+function warnOracleSourcesDropped(): void {
+  if (warnedOracleSourcesDropped) return;
+  warnedOracleSourcesDropped = true;
+  console.warn(
+    "[7k] Oracle-priced sources " +
+      `(${[...ORACLE_BASED_SOURCES].join(", ")}) were excluded from this quote: ` +
+      "they need a Pyth price update in buildTx, and the default Pyth endpoint " +
+      "is the retired public Hermes. Call Config.usePythPro({ accessToken }) or " +
+      "Config.setPythConnection(...) to enable them.",
+  );
+}
+
 export async function getQuote(
   {
     tokenIn,
@@ -80,8 +94,11 @@ export async function getQuote(
   requestInit?: RequestInit
 ) {
   let sources = _sources;
-  if (isSponsored) {
+  if (isSponsored || !hasPythOptIn()) {
     sources = _sources.filter((s) => !ORACLE_BASED_SOURCES.has(s));
+    if (!isSponsored && sources.length !== _sources.length) {
+      warnOracleSourcesDropped();
+    }
   }
   const params = new URLSearchParams({
     amount: amountIn,
