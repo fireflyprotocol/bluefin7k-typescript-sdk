@@ -40,6 +40,11 @@ const quoteResponse = await getQuote({
 });
 ```
 
+Oracle-priced sources (`obric`, `haedal_pmm`, `sevenk_v1`,
+`steamm_oracle_quoter`, `steamm_oracle_quoter_v2`) are excluded until a Pyth
+endpoint is configured, whether you pass them explicitly or fall back to the
+defaults. See [Enable Pyth-priced sources](../README.md#enable-pyth-priced-sources).
+
 ## 2. Build Transaction
 
 ```typescript
