@@ -213,7 +213,7 @@ export const buildTx = async ({
 // We size the gas budget ourselves because @mysten/sui's auto-estimator
 // was too low for our multi-step swaps and txs were failing on chain.
 // We dry-run and double the result for safety. Sui only charges actual
-// gas used, so over-budgeting costs the user nothing.
+// gas used, but the sender must hold the whole budget, so keep it tight.
 //
 // Edge case: a swap that destroys lots of coin objects can get back a
 // big storage rebate, making the dry-run's net gas negative. Doubling a
