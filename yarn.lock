@@ -49,7 +49,7 @@ __metadata:
     typescript-eslint: "npm:^8.34.1"
     uuid: "npm:^13.0.0"
   peerDependencies:
-    "@mysten/sui": ^2.17.0
+    "@mysten/sui": ^2.31.3
     "@pythnetwork/pyth-sui-js": ^4.0.0
   languageName: unknown
   linkType: soft
