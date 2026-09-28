@@ -258,10 +258,15 @@ const estimateAndSetGasBudget = async (
     probe.setGasPayment([]);
     const txBytes = await probe.build({ client });
 
-    const dryRun = await client.core.simulateTransaction({
+    // @mysten/sui >= 2.31 turns node-side gas selection on for empty payment,
+    // which reintroduces the budget-vs-balance check. Only the gRPC and
+    // GraphQL cores type the flag, hence the untyped options object.
+    const simulateOptions = {
       transaction: txBytes,
-      include: { effects: true },
-    });
+      include: { effects: true } as const,
+      doGasSelection: false,
+    };
+    const dryRun = await client.core.simulateTransaction(simulateOptions);
 
     const txResult = dryRun.Transaction ?? dryRun.FailedTransaction;
     if (dryRun.$kind === "Transaction" && txResult?.effects?.status.success) {
