@@ -249,16 +249,14 @@ const estimateAndSetGasBudget = async (
 
   try {
     tx.setSenderIfNotSet(accountAddress);
-    // gRPC `simulateTransaction` ENFORCES the tx's gas budget at runtime
-    // (unlike JSON-RPC dryRun, which ignored it) and never does gas
-    // selection here, so building with no budget bakes in mysten's too-low
-    // auto-estimate and the dry run aborts with InsufficientGas before we
-    // can read real usage. Set an ample ceiling first; the success branch
-    // below overrides it with the tight computed budget, and if estimation
-    // fails the tx safely retains this max budget (Sui only charges gas
-    // actually used).
-    tx.setGasBudget(MAX_GAS_BUDGET);
-    const txBytes = await tx.build({ client });
+    // gRPC simulate enforces the budget, so probe a copy with a high budget
+    // and empty payment (the node mocks gas, as @mysten/sui's resolver relies
+    // on). Stamping it on the real tx broke senders holding < 0.5 SUI.
+    await tx.prepareForSerialization({ client });
+    const probe = Transaction.from(tx);
+    probe.setGasBudget(MAX_GAS_BUDGET);
+    probe.setGasPayment([]);
+    const txBytes = await probe.build({ client });
 
     const dryRun = await client.core.simulateTransaction({
       transaction: txBytes,
@@ -292,8 +290,7 @@ const estimateAndSetGasBudget = async (
     console.warn("[gas] estimation failed:", err);
   }
 
-  // Fallback: use max budget if dry run fails or reverts
-  // tx.setGasBudget(MAX_GAS_BUDGET);
+  // Fallback: leave the budget unset so the wallet or @mysten/sui estimates it.
 };
 
 const getPythPriceFeeds = (res: QuoteResponse) => {
